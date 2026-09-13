@@ -2,9 +2,10 @@
 
 // Homepage chat panel — a thin rendering layer over useChatSession, which
 // owns message history and the Question Limit (ADR-0002). Real replies come
-// from the chat.ask tRPC procedure via askAboutCvClient (ADR-0006), backed
-// by the Groq adapter from docs/adr/0001-groq-free-tier-for-chat-agent.md
-// and docs/adr/0003-openai-compatible-llm-adapter.md (lib/llm/chat.ts).
+// from the chat.ask tRPC procedure via useAskAboutCv, a TanStack Query
+// mutation (ADR-0006), backed by the Groq adapter from
+// docs/adr/0001-groq-free-tier-for-chat-agent.md and
+// docs/adr/0003-openai-compatible-llm-adapter.md (lib/llm/chat.ts).
 //
 // Static chrome (greeting, labels, topic chips) is translated via next-intl
 // (messages/{it,en}.json, provided by I18nProvider based on the browser
@@ -21,8 +22,8 @@
 import { useTranslations } from "next-intl";
 import { useCallback, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { askAboutCvClient } from "@/lib/chat/ask-about-cv-client";
 import type { AskAboutCv } from "@/lib/chat/use-chat-session";
+import { useAskAboutCv } from "@/lib/chat/use-ask-about-cv";
 import { useChatSession } from "@/lib/chat/use-chat-session";
 import { mockCv } from "@/lib/mock-cv";
 
@@ -67,16 +68,17 @@ export function ChatPanel() {
   const t = useTranslations("Chat");
   const topics = t.raw("topics") as Topic[];
 
+  const askAboutCvMutation = useAskAboutCv();
   const askAboutCv = useCallback<AskAboutCv>(
     async (question, history) => {
       try {
-        return await askAboutCvClient(question, history);
+        return await askAboutCvMutation(question, history);
       } catch (error) {
         console.error("Chat request failed", error);
         return t("errorReply");
       }
     },
-    [t]
+    [askAboutCvMutation, t]
   );
 
   const { messages, isLoading, sendQuestion } = useChatSession({
