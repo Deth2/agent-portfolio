@@ -1,26 +1,163 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Raw brand palette exposed as utilities too, e.g. bg-primary-dark,
+     text-text-muted, border-secondary-alt, bg-success. See CONTEXT.md /
+     docs/adr/0005-brand-palette-60-30-10.md for the 60/30/10 rationale. */
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-tint: var(--primary-tint);
+  --color-secondary-alt: var(--secondary-alt);
+  --color-surface: var(--surface);
+  --color-bg: var(--bg);
+  --color-text: var(--text);
+  --color-text-strong: var(--text-strong);
+  --color-text-muted: var(--text-muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* --- Brand palette (source of truth, verbatim) --- */
+  --primary: #17395c;
+  --primary-dark: #0f2740;
+  --primary-tint: #e3edf4;
+  --secondary: #8fb8c9;
+  --secondary-alt: #a9c3a6;
+  --accent: #ffb020;
+  --bg: #f7f9f9;
+  --surface: #ffffff;
+  --border: #dde5e6;
+  --text: #3c4a57;
+  --text-strong: #12212e;
+  --text-muted: #6b7a88;
+  --success: #2e7d5b;
+  --warning: #b9791c;
+  --danger: #c2453d;
+
+  /* --- shadcn/ui semantic tokens, mapped onto the brand palette ---
+     60% neutral (bg/surface) · 30% brand navy (primary/tint) · 10% accent (gold),
+     applied sparingly to interactive/hover/focus states. */
+  --background: var(--bg);
+  --foreground: var(--text-strong);
+  --card: var(--surface);
+  --card-foreground: var(--text-strong);
+  --popover: var(--surface);
+  --popover-foreground: var(--text-strong);
+  --primary-foreground: var(--surface);
+  --secondary: var(--primary-tint);
+  --secondary-foreground: var(--primary-dark);
+  --muted: var(--primary-tint);
+  --muted-foreground: var(--text-muted);
+  --accent-foreground: var(--primary-dark);
+  --destructive: var(--danger);
+  --input: var(--surface);
+  --ring: var(--accent);
+  --chart-1: var(--primary);
+  --chart-2: var(--secondary);
+  --chart-3: var(--secondary-alt);
+  --chart-4: var(--accent);
+  --chart-5: var(--primary-dark);
+  --radius: 0.625rem;
+  --sidebar: var(--primary-dark);
+  --sidebar-foreground: var(--bg);
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: var(--primary-dark);
+  --sidebar-accent: var(--primary);
+  --sidebar-accent-foreground: var(--bg);
+  --sidebar-border: color-mix(in srgb, var(--bg) 15%, transparent);
+  --sidebar-ring: var(--accent);
+}
+
+.dark {
+  /* Same brand palette, dark surface reading: primary-dark becomes the
+     canvas, primary the raised surface. Accent stays the sparing 10%. */
+  --background: var(--primary-dark);
+  --foreground: var(--bg);
+  --card: var(--primary);
+  --card-foreground: var(--bg);
+  --popover: var(--primary);
+  --popover-foreground: var(--bg);
+  --primary: var(--secondary);
+  --primary-foreground: var(--primary-dark);
+  --secondary: color-mix(in srgb, var(--primary) 60%, black);
+  --secondary-foreground: var(--bg);
+  --muted: color-mix(in srgb, var(--primary) 60%, black);
+  --muted-foreground: var(--secondary);
+  --accent-foreground: var(--primary-dark);
+  --destructive: var(--danger);
+  --border: color-mix(in srgb, var(--bg) 15%, transparent);
+  --input: color-mix(in srgb, var(--bg) 15%, transparent);
+  --ring: var(--accent);
+  --chart-1: var(--secondary);
+  --chart-2: var(--secondary-alt);
+  --chart-3: var(--accent);
+  --chart-4: var(--primary-tint);
+  --chart-5: var(--bg);
+  --sidebar: var(--primary-dark);
+  --sidebar-foreground: var(--bg);
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: var(--primary-dark);
+  --sidebar-accent: var(--primary);
+  --sidebar-accent-foreground: var(--bg);
+  --sidebar-border: color-mix(in srgb, var(--bg) 15%, transparent);
+  --sidebar-ring: var(--accent);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
 }
