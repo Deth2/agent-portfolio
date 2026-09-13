@@ -1,4 +1,8 @@
 {
+  "Common": {
+    "loading": "Caricamento...",
+    "loadError": "Non è stato possibile caricare il profilo. Riprova più tardi."
+  },
   "Tabs": {
     "chat": "💬 Chat",
     "experience": "Esperienze",

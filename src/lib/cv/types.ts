@@ -1,7 +1,6 @@
-// CvProfile shape — matches the placeholder established by src/lib/mock-cv.ts.
-// parseCvProfile() produces this same shape from the real CV Markdown once it
-// exists (see .scratch/cv-chat-agent/spec.md); until then mock-cv.ts is the
-// only producer, and both are consumed identically by page.tsx / chat-panel.tsx.
+// CvProfile shape — produced by parseCvProfile() from content/cv.md (see
+// src/lib/cv/load-cv-profile.ts) and consumed by the chat.ask and cv.get
+// tRPC procedures (src/server/routers).
 
 export type Contact = {
   label: string;

@@ -3,15 +3,14 @@
 // prior history, return the assistant's reply text), now exposed as a tRPC
 // procedure served over Hono (see src/server/hono.ts).
 //
-// The CV Profile context comes from mock-cv.ts until the real CV Markdown
-// exists (see src/lib/mock-cv.ts) — swap this for parseCvProfile() over the
-// real file once it's wired into src/app/page.tsx and
-// src/components/chat-panel.tsx.
+// The CV Profile context comes from content/cv.md (see
+// src/lib/cv/load-cv-profile.ts) — the same file that drives the static CV
+// sections via the cv.get query (./cv.ts), so the two never drift apart.
 
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { loadCvProfile } from "@/lib/cv/load-cv-profile";
 import { askAboutCv } from "@/lib/llm/chat";
-import { mockCv } from "@/lib/mock-cv";
 import { publicProcedure, router } from "../trpc";
 
 const chatMessageSchema = z.object({
@@ -29,7 +28,8 @@ export const chatRouter = router({
     )
     .mutation(async ({ input }) => {
       try {
-        const reply = await askAboutCv(input.question, mockCv, input.history);
+        const cvProfile = loadCvProfile();
+        const reply = await askAboutCv(input.question, cvProfile, input.history);
         return { reply };
       } catch (error) {
         console.error("askAboutCv failed", error);

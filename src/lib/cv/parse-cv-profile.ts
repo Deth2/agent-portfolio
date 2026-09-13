@@ -1,8 +1,9 @@
 // Parses the CV Profile Markdown file (YAML frontmatter for structured
 // fields + prose sections for experiences/hobbies) into the typed CvProfile
-// shape already established by src/lib/mock-cv.ts. See
-// .scratch/cv-chat-agent/spec.md and CONTEXT.md for the format and the
-// domain vocabulary this parser and its error messages should use.
+// shape (see ./types.ts). Real content lives in content/cv.md (see
+// ./load-cv-profile.ts) — see .scratch/cv-chat-agent/spec.md and CONTEXT.md
+// for the format and the domain vocabulary this parser and its error
+// messages should use.
 //
 // Fails loudly (throws CvParseError) on any missing/malformed required
 // field rather than silently rendering blank sections — a broken CV update

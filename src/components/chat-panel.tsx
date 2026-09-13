@@ -19,26 +19,35 @@
 // input on its own row (no side-by-side send button), avatar on assistant
 // messages, labeled input and topic list.
 
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useCallback, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import type { AskAboutCv } from "@/lib/chat/use-chat-session";
 import { useAskAboutCv } from "@/lib/chat/use-ask-about-cv";
 import { useChatSession } from "@/lib/chat/use-chat-session";
-import { mockCv } from "@/lib/mock-cv";
+import { useTRPC } from "@/lib/trpc/context";
 
 type Topic = { label: string; prompt: string };
 
-const AVATAR_INITIALS = mockCv.name
-  .split(" ")
-  .map((p) => p[0])
-  .join("");
+function avatarInitials(name: string) {
+  return name
+    .split(" ")
+    .map((p) => p[0])
+    .join("");
+}
 
-function AssistantBubble({ children }: { children: React.ReactNode }) {
+function AssistantBubble({
+  avatarInitials,
+  children,
+}: {
+  avatarInitials: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex items-start gap-2.5">
       <div className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-primary-dark text-xs font-semibold tracking-wide text-bg">
-        {AVATAR_INITIALS}
+        {avatarInitials}
       </div>
       <div className="rounded-tl-sm rounded-r-lg rounded-bl-lg bg-muted p-3 text-sm leading-relaxed text-foreground">
         {children}
@@ -65,6 +74,13 @@ function SendIcon() {
 }
 
 export function ChatPanel() {
+  const trpc = useTRPC();
+  // Already resolved by the time ChatPanel mounts — page.tsx (its only
+  // caller) fetches the same cv.get query first and gates on it — so this
+  // is a cache hit, not a second round trip.
+  const { data: cv } = useQuery(trpc.cv.get.queryOptions());
+  const initials = cv ? avatarInitials(cv.name) : "";
+
   const t = useTranslations("Chat");
   const topics = t.raw("topics") as Topic[];
 
@@ -104,11 +120,13 @@ export function ChatPanel() {
     <Card className="border-primary/20">
       <CardContent className="space-y-6 p-6">
         <div className="space-y-3">
-          <AssistantBubble>{t("greeting")}</AssistantBubble>
+          <AssistantBubble avatarInitials={initials}>{t("greeting")}</AssistantBubble>
 
           {messages.map((m, i) =>
             m.role === "assistant" ? (
-              <AssistantBubble key={i}>{m.content}</AssistantBubble>
+              <AssistantBubble key={i} avatarInitials={initials}>
+                {m.content}
+              </AssistantBubble>
             ) : (
               <div
                 key={i}

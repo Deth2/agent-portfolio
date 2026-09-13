@@ -5,16 +5,27 @@
 // CV sections. Layout promoted from the winning prototype variant (C); see
 // docs/adr/0005-brand-palette-60-30-10.md for the color system.
 
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { ChatPanel } from "@/components/chat-panel";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { mockCv } from "@/lib/mock-cv";
+import { useTRPC } from "@/lib/trpc/context";
 
 export default function Home() {
-  const cv = mockCv;
+  const trpc = useTRPC();
+  const { data: cv, isPending, isError } = useQuery(trpc.cv.get.queryOptions());
   const t = useTranslations("Tabs");
+  const tCommon = useTranslations("Common");
+
+  if (isPending) {
+    return <div className="mx-auto max-w-4xl px-6 py-8 text-sm text-muted-foreground">{tCommon("loading")}</div>;
+  }
+
+  if (isError || !cv) {
+    return <div className="mx-auto max-w-4xl px-6 py-8 text-sm text-destructive">{tCommon("loadError")}</div>;
+  }
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-8">

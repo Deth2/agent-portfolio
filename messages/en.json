@@ -1,4 +1,8 @@
 {
+  "Common": {
+    "loading": "Loading...",
+    "loadError": "Couldn't load the profile. Please try again later."
+  },
   "Tabs": {
     "chat": "💬 Chat",
     "experience": "Experience",
