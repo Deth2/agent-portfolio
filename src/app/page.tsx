@@ -5,18 +5,16 @@
 // CV sections. Layout promoted from the winning prototype variant (C); see
 // docs/adr/0005-brand-palette-60-30-10.md for the color system.
 
+import { useTranslations } from "next-intl";
 import { ChatPanel } from "@/components/chat-panel";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { strings } from "@/lib/i18n/strings";
-import { useSiteLocale } from "@/lib/i18n/use-site-locale";
 import { mockCv } from "@/lib/mock-cv";
 
 export default function Home() {
   const cv = mockCv;
-  const locale = useSiteLocale();
-  const t = strings[locale].tabs;
+  const t = useTranslations("Tabs");
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-8">
@@ -27,12 +25,12 @@ export default function Home() {
 
       <Tabs defaultValue="chat">
         <TabsList>
-          <TabsTrigger value="chat">{t.chat}</TabsTrigger>
-          <TabsTrigger value="experience">{t.experience}</TabsTrigger>
-          <TabsTrigger value="skills">{t.skills}</TabsTrigger>
-          <TabsTrigger value="languages">{t.languages}</TabsTrigger>
-          <TabsTrigger value="hobbies">{t.hobbies}</TabsTrigger>
-          <TabsTrigger value="contacts">{t.contacts}</TabsTrigger>
+          <TabsTrigger value="chat">{t("chat")}</TabsTrigger>
+          <TabsTrigger value="experience">{t("experience")}</TabsTrigger>
+          <TabsTrigger value="skills">{t("skills")}</TabsTrigger>
+          <TabsTrigger value="languages">{t("languages")}</TabsTrigger>
+          <TabsTrigger value="hobbies">{t("hobbies")}</TabsTrigger>
+          <TabsTrigger value="contacts">{t("contacts")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="chat" className="pt-4">
