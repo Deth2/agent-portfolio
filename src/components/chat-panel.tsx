@@ -8,8 +8,8 @@
 // docs/adr/0003-openai-compatible-llm-adapter.md (lib/llm/chat.ts).
 //
 // Static chrome (greeting, labels, topic chips) is translated via next-intl
-// (messages/{it,en}.json, provided by I18nProvider based on the browser
-// locale — see lib/i18n) — the greeting is rendered separately from the
+// (lib/i18n/messages/{it,en}.json, provided by I18nProvider based on the
+// browser locale — see lib/i18n) — the greeting is rendered separately from the
 // controller's own history so it reacts to a locale resolved after mount,
 // rather than being frozen into history at whatever locale was current when
 // the hook first initialized. The agent's own replies always match the
@@ -26,6 +26,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { AskAboutCv } from "@/lib/chat/use-chat-session";
 import { useAskAboutCv } from "@/lib/chat/use-ask-about-cv";
 import { useChatSession } from "@/lib/chat/use-chat-session";
+import { useTypewriter } from "@/lib/chat/use-typewriter";
 import { useTRPC } from "@/lib/trpc/context";
 
 type Topic = { label: string; prompt: string };
@@ -37,20 +38,95 @@ function avatarInitials(name: string) {
     .join("");
 }
 
+function AssistantAvatar({ initials }: { initials: string }) {
+  return (
+    <div className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-primary-dark text-xs font-semibold tracking-wide text-bg">
+      {initials}
+    </div>
+  );
+}
+
 function AssistantBubble({
   avatarInitials,
   children,
+  onClick,
+  onClickLabel,
 }: {
   avatarInitials: string;
   children: React.ReactNode;
+  onClick?: () => void;
+  onClickLabel?: string;
 }) {
   return (
-    <div className="flex items-start gap-2.5">
-      <div className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-primary-dark text-xs font-semibold tracking-wide text-bg">
-        {avatarInitials}
-      </div>
-      <div className="rounded-tl-sm rounded-r-lg rounded-bl-lg bg-muted p-3 text-sm leading-relaxed text-foreground">
+    <div
+      className="flex items-start gap-2.5"
+      onClick={onClick}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault(); // stop Space from also scrolling the page
+                onClick();
+              }
+            }
+          : undefined
+      }
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={onClick ? onClickLabel : undefined}
+    >
+      <AssistantAvatar initials={avatarInitials} />
+      <div
+        className={`rounded-tl-sm rounded-r-lg rounded-bl-lg bg-muted p-3 text-sm leading-relaxed text-foreground ${onClick ? "cursor-pointer" : ""}`}
+      >
         {children}
+      </div>
+    </div>
+  );
+}
+
+// Reveals an assistant reply progressively (simulated streaming — see
+// use-typewriter.ts). Only animates when `animate` is true, i.e. for the
+// most recent assistant message; earlier messages render fully formed.
+// Clicking the bubble while it's still typing reveals the rest instantly.
+function TypedReply({
+  avatarInitials,
+  text,
+  animate,
+  skipLabel,
+}: {
+  avatarInitials: string;
+  text: string;
+  animate: boolean;
+  skipLabel: string;
+}) {
+  const { displayedText, isTyping, skip } = useTypewriter(text, animate);
+  return (
+    <AssistantBubble
+      avatarInitials={avatarInitials}
+      onClick={isTyping ? skip : undefined}
+      onClickLabel={skipLabel}
+    >
+      {displayedText}
+    </AssistantBubble>
+  );
+}
+
+// "Sta pensando" indicator shown while waiting for the reply, styled after
+// the classic bouncing-dots typing indicator. Bounce is skipped for
+// prefers-reduced-motion via Tailwind's motion-reduce: variant.
+function ThinkingBubble({ avatarInitials }: { avatarInitials: string }) {
+  return (
+    <div className="flex items-start gap-2.5">
+      <AssistantAvatar initials={avatarInitials} />
+      <div className="flex items-center gap-1 rounded-tl-sm rounded-r-lg rounded-bl-lg bg-muted px-4 py-3.5">
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground motion-reduce:animate-none"
+            style={{ animationDelay: `${i * 0.15}s` }}
+          />
+        ))}
       </div>
     </div>
   );
@@ -124,9 +200,13 @@ export function ChatPanel() {
 
           {messages.map((m, i) =>
             m.role === "assistant" ? (
-              <AssistantBubble key={i} avatarInitials={initials}>
-                {m.content}
-              </AssistantBubble>
+              <TypedReply
+                key={i}
+                avatarInitials={initials}
+                text={m.content}
+                animate={i === messages.length - 1}
+                skipLabel={t("skipTyping")}
+              />
             ) : (
               <div
                 key={i}
@@ -136,6 +216,8 @@ export function ChatPanel() {
               </div>
             )
           )}
+
+          {isLoading && <ThinkingBubble avatarInitials={initials} />}
         </div>
 
         <form
