@@ -1,3 +1,7 @@
 # La chat è il contenuto primario della homepage
 
+> **Superseded da [0007-chat-only-homepage.md](./0007-chat-only-homepage.md)**: la tab bar descritta qui sotto è stata rimossa; la homepage mostra ora solo la chat, senza altre sezioni raggiungibili dall'UI.
+
 Inizialmente il portfolio prevedeva sezioni CV scorrevoli con la chat come funzione secondaria (bolla flottante o pannello apribile). Il proprietario del progetto ha richiesto esplicitamente che la chat sia ciò che il visitatore vede per primo, senza click aggiuntivi, sulla pagina principale — le sezioni strutturate del CV restano disponibili ma non sono più il contenuto di apertura. Le tre varianti UI in `/prototype/portfolio-design` sono state aggiornate di conseguenza: la sidebar (A) incorpora la chat invece di una bolla, il layout hero (B) la mostra già sotto l'hero, il layout a tab (C) apre di default sulla tab "Chat" invece che su "Esperienze". Costo accettato: questo rende il portfolio meno "sfogliabile a colpo d'occhio" per chi preferisce leggere piuttosto che chattare — mitigato lasciando comunque le sezioni CV raggiungibili in un solo scroll/click, non rimosse.
+
+**Esito**: tra le 3 varianti prototipate, scelta la **Variante C (tabbed, chat come tab di default)** — promossa a homepage reale in `src/app/page.tsx`. Le altre due varianti e lo switcher restano solo sul branch `prototype/portfolio-design-variants`, non su main.

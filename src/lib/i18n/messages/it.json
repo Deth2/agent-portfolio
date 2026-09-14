@@ -3,20 +3,11 @@
     "loading": "Caricamento...",
     "loadError": "Non è stato possibile caricare il profilo. Riprova più tardi."
   },
-  "Tabs": {
-    "chat": "💬 Chat",
-    "experience": "Esperienze",
-    "skills": "Skills",
-    "languages": "Lingue",
-    "hobbies": "Hobby",
-    "contacts": "Contatti"
-  },
   "Chat": {
     "greeting": "Ciao! Sono Benedetta 👋 Vuoi conoscere qualcosa su di me? Fammi una domanda.",
     "questionLabel": "La tua domanda",
     "questionPlaceholder": "Es. Che esperienza hai con React?",
     "send": "Invia",
-    "sending": "Invio...",
     "topicsLabel": "Argomenti",
     "topics": [
       { "label": "Esperienza", "prompt": "Raccontami delle tue esperienze lavorative" },

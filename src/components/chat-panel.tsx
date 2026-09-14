@@ -15,11 +15,14 @@
 // the hook first initialized. The agent's own replies always match the
 // visitor's question language instead (see lib/llm/chat.ts).
 //
-// Layout/style folded in from the "Chat Benedetta" design canvas: question
-// input on its own row (no side-by-side send button), avatar on assistant
-// messages, labeled input and topic list.
+// Layout/style: avatar on assistant messages, topic list below the input.
+// Question input and send button are merged into a single pill (icon-only
+// send button inline at the end of the field) per docs/adr/0007-chat-only-homepage.md;
+// the visible "Domanda"/"Question" label was dropped in favor of a sr-only
+// label, since the field's accessible name no longer needs to be on screen.
 
 import { useQuery } from "@tanstack/react-query";
+import { SendHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useRef, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -137,23 +140,6 @@ function ThinkingBubble({ avatarInitials }: { avatarInitials: string }) {
   );
 }
 
-function SendIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-4 w-4"
-    >
-      <line x1="4" y1="12" x2="20" y2="12" />
-      <polyline points="13 5 20 12 13 19" />
-    </svg>
-  );
-}
-
 export function ChatPanel() {
   const trpc = useTRPC();
   // Already resolved by the time ChatPanel mounts — page.tsx (its only
@@ -231,30 +217,27 @@ export function ChatPanel() {
             handleSend();
           }}
         >
-          <label
-            htmlFor="chat-question"
-            className="mb-2 block text-[11px] font-semibold tracking-wide text-muted-foreground uppercase"
-          >
+          <label htmlFor="chat-question" className="sr-only">
             {t("questionLabel")}
           </label>
-          <Input
-            id="chat-question"
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={isLoading}
-            placeholder={t("questionPlaceholder")}
-            className="h-12 rounded-xl px-4 text-sm focus-visible:border-accent focus-visible:ring-accent/30"
-          />
-
-          <div className="mt-3 flex justify-end">
+          <div className="relative">
+            <Input
+              id="chat-question"
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={isLoading}
+              placeholder={t("questionPlaceholder")}
+              className="h-12 rounded-full pr-12 pl-4 text-sm focus-visible:border-accent focus-visible:ring-accent/30"
+            />
             <Button
               type="submit"
               disabled={isLoading}
-              className="rounded-lg bg-accent px-5 py-2.5 text-accent-foreground shadow-sm hover:bg-accent/90 hover:shadow-md"
+              size="icon"
+              aria-label={t("send")}
+              className="absolute top-1.5 right-1.5 h-9 w-9 rounded-full bg-accent text-accent-foreground shadow-sm hover:bg-accent/90 hover:shadow-md"
             >
-              <SendIcon />
-              {isLoading ? t("sending") : t("send")}
+              <SendHorizontal className="h-4 w-4" />
             </Button>
           </div>
         </form>
