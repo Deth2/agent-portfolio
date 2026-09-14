@@ -22,7 +22,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useCallback, useRef, useState } from "react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import type { AskAboutCv } from "@/lib/chat/use-chat-session";
 import { useAskAboutCv } from "@/lib/chat/use-ask-about-cv";
 import { useChatSession } from "@/lib/chat/use-chat-session";
@@ -40,9 +43,11 @@ function avatarInitials(name: string) {
 
 function AssistantAvatar({ initials }: { initials: string }) {
   return (
-    <div className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-primary-dark text-xs font-semibold tracking-wide text-bg">
-      {initials}
-    </div>
+    <Avatar className="flex-none">
+      <AvatarFallback className="bg-primary-dark text-xs font-semibold tracking-wide text-bg">
+        {initials}
+      </AvatarFallback>
+    </Avatar>
   );
 }
 
@@ -232,25 +237,25 @@ export function ChatPanel() {
           >
             {t("questionLabel")}
           </label>
-          <input
+          <Input
             id="chat-question"
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading}
             placeholder={t("questionPlaceholder")}
-            className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none transition-colors focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/30 disabled:opacity-60"
+            className="h-12 rounded-xl px-4 text-sm focus-visible:border-accent focus-visible:ring-accent/30"
           />
 
           <div className="mt-3 flex justify-end">
-            <button
+            <Button
               type="submit"
               disabled={isLoading}
-              className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-foreground shadow-sm transition-shadow hover:shadow-md disabled:opacity-60"
+              className="rounded-lg bg-accent px-5 py-2.5 text-accent-foreground shadow-sm hover:bg-accent/90 hover:shadow-md"
             >
               <SendIcon />
               {isLoading ? t("sending") : t("send")}
-            </button>
+            </Button>
           </div>
         </form>
 
@@ -260,14 +265,16 @@ export function ChatPanel() {
           </span>
           <div className="flex flex-wrap gap-2">
             {topics.map((topic) => (
-              <button
+              <Button
                 key={topic.label}
                 type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => handleTopicClick(topic.prompt)}
-                className="rounded-full border border-transparent bg-secondary px-3.5 py-1.5 text-xs font-medium text-secondary-foreground transition-colors hover:border-accent hover:bg-surface"
+                className="rounded-full border border-transparent px-3.5 py-1.5 text-xs font-medium hover:border-accent hover:bg-surface"
               >
                 {topic.label}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
