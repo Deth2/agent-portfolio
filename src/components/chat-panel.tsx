@@ -228,7 +228,7 @@ export function ChatPanel() {
               onChange={(e) => setInput(e.target.value)}
               disabled={isLoading}
               placeholder={t("questionPlaceholder")}
-              className="h-12 rounded-full pr-12 pl-4 text-sm focus-visible:border-accent focus-visible:ring-accent/30"
+              className="h-12 rounded-full border-border pr-12 pl-4 text-sm focus-visible:border-accent focus-visible:ring-accent/30"
             />
             <Button
               type="submit"
