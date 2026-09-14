@@ -25,6 +25,9 @@ import { useQuery } from "@tanstack/react-query";
 import { SendHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useRef, useState } from "react";
+import ReactMarkdown, { type Components } from "react-markdown";
+import remarkBreaks from "remark-breaks";
+import remarkGfm from "remark-gfm";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -42,6 +45,38 @@ function avatarInitials(name: string) {
     .split(" ")
     .map((p) => p[0])
     .join("");
+}
+
+// Assistant replies come back as Markdown (bullet lists, bold, links —
+// see lib/llm/chat.ts's system prompt) instead of plain text, so they're
+// rendered rather than shown with literal "*"/"**" characters. Tight,
+// bubble-sized spacing replaces the browser's default block margins;
+// remark-breaks turns single newlines into <br> (the model doesn't
+// reliably emit blank lines between paragraphs); raw HTML in the source is
+// left un-rendered by default (no rehype-raw), which is also what keeps
+// this safe against HTML/script injection from the reply text.
+const markdownComponents: Components = {
+  p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+  ul: ({ children }) => <ul className="mb-2 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>,
+  ol: ({ children }) => <ol className="mb-2 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>,
+  li: ({ children }) => <li>{children}</li>,
+  strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+  a: ({ children, href }) => (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="underline hover:text-accent">
+      {children}
+    </a>
+  ),
+  code: ({ children }) => (
+    <code className="rounded bg-foreground/10 px-1 py-0.5 font-mono text-[0.85em]">{children}</code>
+  ),
+};
+
+function MarkdownContent({ text }: { text: string }) {
+  return (
+    <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]} components={markdownComponents}>
+      {text}
+    </ReactMarkdown>
+  );
 }
 
 function AssistantAvatar({ initials }: { initials: string }) {
@@ -115,7 +150,7 @@ function TypedReply({
       onClick={isTyping ? skip : undefined}
       onClickLabel={skipLabel}
     >
-      {displayedText}
+      <MarkdownContent text={displayedText} />
     </AssistantBubble>
   );
 }
