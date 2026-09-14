@@ -9,8 +9,8 @@
 
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
-import en from "../../../messages/en.json";
-import it from "../../../messages/it.json";
+import en from "./messages/en.json";
+import it from "./messages/it.json";
 import { useSiteLocale } from "./use-site-locale";
 
 const messages = { it, en };
