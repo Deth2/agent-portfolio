@@ -5,19 +5,27 @@
   },
   "Chat": {
     "greeting": "Ciao! Sono Benedetta 👋 Vuoi conoscere qualcosa su di me? Fammi una domanda.",
+    "headerTitle": "Parla con me",
+    "headerSubtitle": "assistente basato sul mio CV",
     "questionLabel": "La tua domanda",
-    "questionPlaceholder": "Es. Che esperienza hai con React?",
+    "questionPlaceholder": "Chiedimi qualcosa — es. che esperienza hai con React?",
     "send": "Invia",
-    "topicsLabel": "Argomenti",
+    "resetButton": "Nuova chat",
+    "footerDisclaimer": "Rispondo solo su di me · sul resto sono serenamente ignorante",
+    "topicsLabel": "Posso parlarti di",
     "topics": [
-      { "label": "Esperienza", "prompt": "Raccontami delle tue esperienze lavorative" },
-      { "label": "Skills", "prompt": "Quali tecnologie sai usare?" },
-      { "label": "Lingue", "prompt": "Che lingue parli?" },
-      { "label": "Hobby", "prompt": "Cosa fai nel tempo libero?" },
-      { "label": "Contatti", "prompt": "Come posso contattarti?" }
+      { "label": "Cosa sai fare meglio?", "prompt": "Cosa sai fare meglio?" },
+      { "label": "Che percorso hai fatto?", "prompt": "Che percorso hai fatto?" },
+      { "label": "Il progetto di cui sei più fiera?", "prompt": "Qual è il progetto di cui sei più fiera?" },
+      { "label": "Che lingue parli?", "prompt": "Che lingue parli?" },
+      { "label": "Possiamo lavorare insieme?", "prompt": "Possiamo lavorare insieme?" }
     ],
     "errorReply": "Mi dispiace, non sono riuscita a rispondere in questo momento. Riprova tra poco.",
     "limitExceededReply": "Hai raggiunto il numero massimo di domande per questa sessione. Scrivimi tramite i Contatti per continuare la conversazione.",
     "skipTyping": "Mostra subito il testo completo"
+  },
+  "Sidebar": {
+    "tagsLabel": "Posso parlarti di",
+    "availability": "Assistente virtuale · sempre disponibile"
   }
 }

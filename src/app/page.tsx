@@ -3,18 +3,25 @@
 // Portfolio homepage. Chat is the only content — no header, no other CV
 // sections reachable from here, per docs/adr/0007-chat-only-homepage.md
 // (which supersedes the tabbed layout from docs/adr/0004-chat-first-homepage.md).
-// See docs/adr/0005-brand-palette-60-30-10.md for the color system.
+//
+// Layout is now a two-column split (profile sidebar + chat card) per
+// ADR-0008, replacing the single centered card from ADR-0007 — the "chat
+// only, no CV tabs" decision in 0007 still holds, this just adds identity
+// chrome around the same one interactive surface. See
+// docs/adr/0005-brand-palette-60-30-10.md for the token system (values
+// updated by ADR-0008, mapping unchanged).
 
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { ChatPanel } from "@/components/chat-panel";
+import { ProfileSidebar } from "@/components/profile-sidebar";
 import { useTRPC } from "@/lib/trpc/context";
 
-// Chat panel is always at least 80% of the viewport width, centered, with
-// no upper max-width cap (docs/adr/0007-chat-only-homepage.md) — same
-// container used across the loading/error/loaded states so the page
-// doesn't shift width when data resolves.
-const PAGE_CONTAINER = "mx-auto w-[80%] px-6 py-8";
+// Radial wash from the design handoff — light blue-teal at the top-left,
+// settling into --bg. Kept as a one-off gradient here (not a token) since
+// nothing else in the app uses it.
+const PAGE_BACKGROUND =
+  "bg-[radial-gradient(120%_90%_at_12%_0%,_oklch(0.968_0.026_235)_0%,_oklch(0.981_0.008_240)_55%,_oklch(0.962_0.028_205)_100%)]";
 
 export default function Home() {
   const trpc = useTRPC();
@@ -22,16 +29,27 @@ export default function Home() {
   const tCommon = useTranslations("Common");
 
   if (isPending) {
-    return <div className={`${PAGE_CONTAINER} text-sm text-muted-foreground`}>{tCommon("loading")}</div>;
+    return (
+      <div className={`flex flex-1 items-center justify-center ${PAGE_BACKGROUND} p-8 text-sm text-muted-foreground`}>
+        {tCommon("loading")}
+      </div>
+    );
   }
 
   if (isError || !cv) {
-    return <div className={`${PAGE_CONTAINER} text-sm text-destructive`}>{tCommon("loadError")}</div>;
+    return (
+      <div className={`flex flex-1 items-center justify-center ${PAGE_BACKGROUND} p-8 text-sm text-destructive`}>
+        {tCommon("loadError")}
+      </div>
+    );
   }
 
   return (
-    <div className={PAGE_CONTAINER}>
-      <ChatPanel />
+    <div className={`flex min-h-full flex-1 flex-col md:flex-row md:items-stretch ${PAGE_BACKGROUND}`}>
+      <ProfileSidebar cv={cv} />
+      <main className="flex min-h-[76dvh] min-w-0 flex-1 flex-col p-3 pb-5 md:min-h-0 md:p-5 md:pl-0">
+        <ChatPanel />
+      </main>
     </div>
   );
 }

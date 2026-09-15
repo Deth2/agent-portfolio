@@ -70,5 +70,15 @@ export function useChatSession({
     [askAboutCv, isLoading, messages, questionCount, questionLimit, limitExceededMessage]
   );
 
-  return { messages, isLoading, sendQuestion };
+  // Clears history and the Question Limit counter for a fresh session —
+  // used by the "nuova chat" control (ADR-0008). Doesn't touch isLoading
+  // directly: a reset while a request is in flight just orphans that
+  // promise's eventual setMessages call onto the cleared history, same as
+  // any other stale-response race this hook doesn't otherwise guard against.
+  const resetSession = useCallback(() => {
+    setMessages(initialMessages);
+    setQuestionCount(0);
+  }, [initialMessages]);
+
+  return { messages, isLoading, sendQuestion, resetSession };
 }

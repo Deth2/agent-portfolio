@@ -88,22 +88,24 @@ contro un typo nel file reale.
 ```
 src/
 ├─ app/
-│  ├─ page.tsx                 homepage (client component, tab chat-first)
+│  ├─ page.tsx                 homepage (client component): sidebar profilo + card chat
 │  └─ api/[[...route]]/route.ts  unico entry point HTTP → delega a Hono
 ├─ server/
 │  ├─ hono.ts                  app Hono, monta tRPC su /api/trpc
 │  ├─ trpc.ts                  init tRPC
 │  └─ routers/                 chat.ask (mutation), cv.get (query)
-├─ components/chat-panel.tsx   rendering layer sopra useChatSession
+├─ components/
+│  ├─ chat-panel.tsx           rendering layer sopra useChatSession
+│  └─ profile-sidebar.tsx      riassunto identità (nome/tagline/skill/contatto)
 ├─ lib/
-│  ├─ chat/                    useChatSession (history + Question Limit),
+│  ├─ chat/                    useChatSession (history + Question Limit + reset),
 │  │                           useAskAboutCv (mutation TanStack Query)
 │  ├─ cv/                      parseCvProfile, loadCvProfile, tipi CvProfile
 │  ├─ llm/                     adapter OpenAI-compatible (askAboutCv)
-│  ├─ i18n/                    rilevazione locale browser + provider next-intl
+│  ├─ i18n/                    rilevazione locale browser + provider next-intl,
+│  │                           messages/{it,en}.json (stringhe della chrome statica)
 │  └─ trpc/                    QueryClient + contesto tRPC per il client
 content/cv.md                  CV Profile — unica fonte di verità
-messages/{it,en}.json          stringhe della chrome statica
 ```
 
 ## Test

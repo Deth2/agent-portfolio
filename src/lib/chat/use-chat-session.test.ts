@@ -105,4 +105,40 @@ describe("useChatSession", () => {
       { role: "assistant", content: "Seconda risposta." },
     ]);
   });
+
+  it("resetSession clears history back to initialMessages and lets a new question through past the old limit", async () => {
+    const askAboutCv = vi.fn().mockResolvedValue("Risposta.");
+    const { result } = renderHook(() =>
+      useChatSession({
+        askAboutCv,
+        initialMessages: [{ role: "assistant", content: "Ciao!" }],
+        questionLimit: { enabled: true, threshold: 1 },
+        limitExceededMessage: LIMIT_EXCEEDED_MESSAGE,
+      })
+    );
+
+    await act(async () => {
+      await result.current.sendQuestion("Domanda 1");
+    });
+    await act(async () => {
+      await result.current.sendQuestion("Domanda 2 oltre il limite");
+    });
+    expect(result.current.messages.at(-1)).toEqual({
+      role: "assistant",
+      content: LIMIT_EXCEEDED_MESSAGE,
+    });
+
+    act(() => {
+      result.current.resetSession();
+    });
+    expect(result.current.messages).toEqual([{ role: "assistant", content: "Ciao!" }]);
+
+    await act(async () => {
+      await result.current.sendQuestion("Domanda dopo il reset");
+    });
+    expect(askAboutCv).toHaveBeenLastCalledWith("Domanda dopo il reset", [
+      { role: "assistant", content: "Ciao!" },
+    ]);
+    expect(result.current.messages.at(-1)).toEqual({ role: "assistant", content: "Risposta." });
+  });
 });

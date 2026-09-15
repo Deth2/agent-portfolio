@@ -20,17 +20,23 @@
 // send button inline at the end of the field) per docs/adr/0007-chat-only-homepage.md;
 // the visible "Domanda"/"Question" label was dropped in favor of a sr-only
 // label, since the field's accessible name no longer needs to be on screen.
+//
+// Card chrome (header with a "nuova chat" reset control, scrollable message
+// area, chips hidden once the visitor has sent a first question, footer
+// disclaimer) follows the design handoff in ADR-0008. `started` is derived
+// from messages.length rather than tracked separately, so resetSession()
+// (which clears messages) automatically brings the topic chips back too.
 
 import { useQuery } from "@tanstack/react-query";
 import { SendHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import type { AskAboutCv } from "@/lib/chat/use-chat-session";
 import { useAskAboutCv } from "@/lib/chat/use-ask-about-cv";
@@ -199,12 +205,32 @@ export function ChatPanel() {
     [askAboutCvMutation, t]
   );
 
-  const { messages, isLoading, sendQuestion } = useChatSession({
+  const { messages, isLoading, sendQuestion, resetSession } = useChatSession({
     askAboutCv,
     limitExceededMessage: t("limitExceededReply"),
   });
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  // Chips hide after the first question and come back once resetSession()
+  // clears messages — derived rather than tracked separately, so reset
+  // doesn't need to also touch a `started` flag.
+  const started = messages.length > 0;
+
+  // Keeps the message list pinned to its latest content — including while
+  // an assistant reply is still being typed out by useTypewriter, since
+  // that grows the content's height without changing messages.length.
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const scrollContentRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const container = scrollAreaRef.current;
+    const content = scrollContentRef.current;
+    if (!container || !content) return;
+    const observer = new ResizeObserver(() => {
+      container.scrollTop = container.scrollHeight;
+    });
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, []);
 
   function handleTopicClick(prompt: string) {
     setInput(prompt);
@@ -219,9 +245,29 @@ export function ChatPanel() {
   }
 
   return (
-    <Card className="border-primary/20">
-      <CardContent className="space-y-6 p-6">
-        <div className="space-y-3">
+    <Card className="min-h-0 flex-1 gap-0 rounded-[28px] border border-white/70 bg-surface/75 py-0 shadow-[0_30px_70px_-40px_oklch(0.45_0.06_250_/_0.45),0_2px_6px_-2px_oklch(0.45_0.06_250_/_0.12)] ring-0 backdrop-blur-xl">
+      <CardHeader className="flex flex-row items-center justify-between gap-4 border-b border-border px-5 py-4 md:px-6">
+        <div className="flex items-center gap-3">
+          <span className="block h-[30px] w-[30px] rounded-[10px] bg-gradient-to-br from-secondary to-secondary-alt" />
+          <div className="flex flex-col">
+            <span className="text-[14.5px] font-semibold text-text-strong">{t("headerTitle")}</span>
+            <span className="font-mono text-[10.5px] tracking-[0.06em] text-text-muted">
+              {t("headerSubtitle")}
+            </span>
+          </div>
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={resetSession}
+          className="h-auto rounded-full border-border bg-surface/60 px-3.5 py-2 font-mono text-[10.5px] tracking-[0.08em] text-text-muted uppercase hover:border-primary/40 hover:bg-surface hover:text-text-strong"
+        >
+          {t("resetButton")}
+        </Button>
+      </CardHeader>
+
+      <CardContent ref={scrollAreaRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-5 md:px-6">
+        <div ref={scrollContentRef} className="space-y-3">
           <AssistantBubble avatarInitials={initials}>{t("greeting")}</AssistantBubble>
 
           {messages.map((m, i) =>
@@ -245,6 +291,25 @@ export function ChatPanel() {
 
           {isLoading && <ThinkingBubble avatarInitials={initials} />}
         </div>
+      </CardContent>
+
+      <CardFooter className="flex-col items-stretch gap-3.5 rounded-b-[28px] border-t-0 bg-transparent px-5 py-4 md:px-6">
+        {!started && (
+          <div className="flex flex-wrap gap-2">
+            {topics.map((topic) => (
+              <Button
+                key={topic.label}
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => handleTopicClick(topic.prompt)}
+                className="rounded-full border border-border bg-surface/75 px-3.5 py-2 text-[13.5px] font-medium text-text hover:border-accent hover:bg-primary-tint"
+              >
+                {topic.label}
+              </Button>
+            ))}
+          </div>
+        )}
 
         <form
           onSubmit={(e) => {
@@ -270,33 +335,17 @@ export function ChatPanel() {
               disabled={isLoading}
               size="icon"
               aria-label={t("send")}
-              className="absolute top-1.5 right-1.5 h-9 w-9 rounded-full bg-accent text-accent-foreground shadow-sm hover:bg-accent/90 hover:shadow-md"
+              className="absolute top-1.5 right-1.5 h-9 w-9 rounded-full bg-gradient-to-br from-accent to-accent-soft text-accent-foreground shadow-sm hover:brightness-105 hover:shadow-md"
             >
               <SendHorizontal className="h-4 w-4" />
             </Button>
           </div>
         </form>
 
-        <div>
-          <span className="mb-2 block text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
-            {t("topicsLabel")}
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {topics.map((topic) => (
-              <Button
-                key={topic.label}
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={() => handleTopicClick(topic.prompt)}
-                className="rounded-full border border-transparent px-3.5 py-1.5 text-xs font-medium hover:border-accent hover:bg-surface"
-              >
-                {topic.label}
-              </Button>
-            ))}
-          </div>
+        <div className="text-center font-mono text-[10.5px] tracking-[0.05em] text-text-muted/80">
+          {t("footerDisclaimer")}
         </div>
-      </CardContent>
+      </CardFooter>
     </Card>
   );
 }

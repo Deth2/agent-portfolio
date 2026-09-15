@@ -5,19 +5,27 @@
   },
   "Chat": {
     "greeting": "Hi! I'm Benedetta 👋 Want to know something about me? Ask away.",
+    "headerTitle": "Talk to me",
+    "headerSubtitle": "assistant grounded in my CV",
     "questionLabel": "Your question",
-    "questionPlaceholder": "E.g. What's your experience with React?",
+    "questionPlaceholder": "Ask me something — e.g. what's your experience with React?",
     "send": "Send",
-    "topicsLabel": "Topics",
+    "resetButton": "New chat",
+    "footerDisclaimer": "I only talk about myself · on everything else I'm blissfully clueless",
+    "topicsLabel": "Ask me about",
     "topics": [
-      { "label": "Experience", "prompt": "Tell me about your work experience" },
-      { "label": "Skills", "prompt": "What technologies do you know?" },
-      { "label": "Languages", "prompt": "What languages do you speak?" },
-      { "label": "Hobbies", "prompt": "What do you do in your free time?" },
-      { "label": "Contacts", "prompt": "How can I reach you?" }
+      { "label": "What are you best at?", "prompt": "What are you best at?" },
+      { "label": "What's your career path?", "prompt": "What's your career path?" },
+      { "label": "Which project are you proudest of?", "prompt": "Which project are you proudest of?" },
+      { "label": "What languages do you speak?", "prompt": "What languages do you speak?" },
+      { "label": "Can we work together?", "prompt": "Can we work together?" }
     ],
     "errorReply": "Sorry, I couldn't get a reply right now. Please try again shortly.",
     "limitExceededReply": "You've reached the maximum number of questions for this session. Reach out via Contacts to keep the conversation going.",
     "skipTyping": "Show the full text now"
+  },
+  "Sidebar": {
+    "tagsLabel": "Ask me about",
+    "availability": "Virtual assistant · always available"
   }
 }

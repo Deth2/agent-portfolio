@@ -10,6 +10,7 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
+  --font-display: var(--font-display);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -61,29 +62,38 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
+  --color-accent-soft: var(--accent-soft);
 }
 
 :root {
-  /* --- Brand palette (source of truth, verbatim) --- */
-  --primary: #17395c;
-  --primary-dark: #0f2740;
-  --primary-tint: #e3edf4;
-  --secondary: #8fb8c9;
-  --secondary-alt: #a9c3a6;
-  --accent: #ffb020;
-  --bg: #f7f9f9;
-  --surface: #ffffff;
-  --border: #dde5e6;
-  --text: #3c4a57;
-  --text-strong: #12212e;
-  --text-muted: #6b7a88;
-  --success: #2e7d5b;
-  --warning: #b9791c;
-  --danger: #c2453d;
+  /* --- Brand palette (source of truth, verbatim) ---
+     Adopted from the Claude Design handoff (see ADR-0008), replacing the
+     hex palette from ADR-0005: a light, airy oklch scale (blue/teal hues)
+     instead of the navy/gold 60/30/10 system. --accent-soft is new — the
+     second stop of the send-button/icon gradients, kept as its own token
+     rather than hardcoded per-component. */
+  --primary: oklch(0.52 0.11 245);
+  --primary-dark: oklch(0.42 0.12 245);
+  --primary-tint: oklch(0.955 0.02 230);
+  --secondary: oklch(0.86 0.07 240);
+  --secondary-alt: oklch(0.9 0.055 205);
+  --accent: oklch(0.72 0.12 245);
+  --accent-soft: oklch(0.79 0.105 212);
+  --bg: oklch(0.981 0.008 240);
+  --surface: oklch(1 0 0);
+  --border: oklch(0.9 0.022 235);
+  --text: oklch(0.34 0.03 250);
+  --text-strong: oklch(0.28 0.032 250);
+  --text-muted: oklch(0.57 0.026 250);
+  --success: oklch(0.72 0.11 230);
+  --warning: oklch(0.65 0.14 70);
+  --danger: oklch(0.55 0.17 25);
 
   /* --- shadcn/ui semantic tokens, mapped onto the brand palette ---
-     60% neutral (bg/surface) · 30% brand navy (primary/tint) · 10% accent (gold),
-     applied sparingly to interactive/hover/focus states. */
+     Neutral bg/surface dominates, primary/tint for structural blocks
+     (sidebar, bubbles), accent (blue gradient) reserved for interactive/
+     focus states (send button, focus ring) — same 60/30/10 layering as
+     ADR-0005, now expressed in the ADR-0008 oklch palette. */
   --background: var(--bg);
   --foreground: var(--text-strong);
   --card: var(--surface);
@@ -159,5 +169,20 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* "Available" status dot in the sidebar (ADR-0008) — referenced via the
+   Tailwind arbitrary property [animation:breathe_...] rather than a custom
+   utility class, since it's used in exactly one place. */
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.35);
   }
 }

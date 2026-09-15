@@ -20,7 +20,7 @@ src/app/
 
 Provider order matters here only in that `I18nProvider` doesn't depend on tRPC data, so either order would work — but keep `TRPCQueryProvider` outermost if a future provider ever needs query data during its own render.
 
-**`page.tsx`** (`Home`) — fetches `cv.get`, then renders a header (`cv.name` / `cv.title`) and a shadcn `Tabs` with six tabs: `chat`, `experience`, `skills`, `languages`, `hobbies`, `contacts`. `chat` is `defaultValue` — visible with no click on load, per [ADR-0004](/docs/adr/0004-chat-first-homepage.md). The other five tabs render directly from the `cv` query result; there's no separate fetch per tab.
+**`page.tsx`** (`Home`) — fetches `cv.get`, then renders a two-column layout: `<ProfileSidebar cv={cv} />` (identity summary — name, title, tagline, top skills, contact) next to `<ChatPanel />`, per [ADR-0008](/docs/adr/0008-sidebar-profile-layout.md) (superseding the single centered card from [ADR-0007](/docs/adr/0007-chat-only-homepage.md), which itself superseded the tabbed layout from [ADR-0004](/docs/adr/0004-chat-first-homepage.md)). There are still no CV tabs/sections reachable from the UI beyond the sidebar's identity summary — chat is the only interactive surface. Columns stack on narrow viewports (Tailwind's `md` breakpoint).
 
 Loading/error states are handled once, before the tabs render at all:
 
@@ -54,6 +54,10 @@ export function useSiteLocale(): SiteLocale {
 
 **Adding a UI string**: add the key under the right namespace in both `src/lib/i18n/messages/en.json` and `it.json`, then read it with `useTranslations("<Namespace>")` in the component. Never hardcode user-facing chrome text in JSX.
 
+## Profile sidebar (`src/components/profile-sidebar.tsx`)
+
+Pure presentation, no data fetching of its own — takes `cv: CvProfile` as a prop (already fetched by `page.tsx`). Renders avatar-initials, name/title, `tagline`, the first `SIDEBAR_TAG_COUNT` (5) entries of `skills` as "ask me about" tags, an animated availability dot, and the `Email` contact. See [ADR-0008](/docs/adr/0008-sidebar-profile-layout.md) for why the sidebar shows only an identity summary, not the full CV sections.
+
 ## Chat panel (`src/components/chat-panel.tsx`)
 
 A thin rendering layer — all state lives in hooks, the component just renders it:
@@ -63,10 +67,11 @@ A thin rendering layer — all state lives in hooks, the component just renders 
 - `useChatSession({ askAboutCv, limitExceededMessage })` (`src/lib/chat/use-chat-session.ts`) owns:
   - `messages` — the conversation history for this browser session only, never shared across visitors.
   - the Question Limit counter — checked *before* calling `askAboutCv`; once over the threshold it synthesizes `limitExceededMessage` locally without a network call at all (see [ADR-0002](/docs/adr/0002-client-side-question-limit.md)).
-  - `isLoading` / `sendQuestion`.
+  - `isLoading` / `sendQuestion` / `resetSession` — the last clears `messages` and the Question Limit counter, wired to the card header's "nuova chat" button (ADR-0008).
 - The greeting bubble is rendered separately from `messages` (not seeded into history) specifically so it reacts to the locale resolving after mount, instead of being frozen at whatever locale was current when the hook first initialized.
-- Local subcomponents: `AssistantBubble` (avatar + message bubble), `SendIcon` (inline SVG) — kept in the same file since neither is reused elsewhere.
-- Topic chips (`t.raw("topics")`) pre-fill the input on click rather than sending immediately, so the visitor can edit before submitting.
+- Local subcomponents: `AssistantBubble` (avatar + message bubble), `TypedReply`, `ThinkingBubble` — kept in the same file since none is reused elsewhere.
+- Topic chips (`t.raw("topics")`) pre-fill the input on click rather than sending immediately, so the visitor can edit before submitting; hidden once `messages.length > 0` (derived `started`), shown again after a reset.
+- A `ResizeObserver` on the message list keeps the scrollable area pinned to the bottom as replies stream in (card body has a fixed height on desktop, per ADR-0008).
 
 ## Adding a new interactive component
 

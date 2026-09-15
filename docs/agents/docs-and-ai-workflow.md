@@ -30,13 +30,15 @@ README.md                           # human-facing getting-started + architectur
 - **`CLAUDE.md`** starts with `@AGENTS.md` (an include directive), then an "## Agent skills" section listing every doc in `docs/agents/`. It's the single index — add a new `docs/agents/*.md` file here whenever one is created, following the existing `### <Name>` + one-line pointer pattern.
 - **`AGENTS.md`** is *not* project-authored documentation — it's a block written and re-added by `next dev` itself (see `node_modules/next/dist/server/lib/generate-agent-files.js`), warning that this Next.js version has breaking changes versus training data and pointing at `node_modules/next/dist/docs/`. Don't edit it by hand; don't be surprised if it reappears after `next dev` runs.
 - **`CONTEXT.md`** is the domain glossary (terms like CV Profile, Experience, Skill, Question Limit — each with a definition and rejected synonyms). It cross-references specific ADRs where a term's meaning was pinned down by a decision (e.g. Question Limit → [ADR-0002](/docs/adr/0002-client-side-question-limit.md)).
-- **`docs/adr/`** holds six ADRs, each an independent, numbered, accepted decision:
+- **`docs/adr/`** holds eight ADRs, each an independent, numbered, accepted decision:
   - `0001-groq-free-tier-for-chat-agent.md`
   - `0002-client-side-question-limit.md`
   - `0003-openai-compatible-llm-adapter.md`
   - `0004-chat-first-homepage.md`
   - `0005-brand-palette-60-30-10.md`
   - `0006-trpc-on-hono-for-api-routes.md`
+  - `0007-chat-only-homepage.md`
+  - `0008-sidebar-profile-layout.md`
 - **`.scratch/cv-chat-agent/spec.md`** is a full PRD-style spec (problem statement, user stories, implementation/testing decisions, out-of-scope, further notes) that links back to ADRs 0001–0005 and to `CONTEXT.md`'s vocabulary. It follows the issue-tracker convention in [issue-tracker.md](./issue-tracker.md) and currently carries `Status: ready-for-agent`.
 - **`README.md`** is the human-facing entry point: stack summary, setup, LLM config instructions, an architecture tree, test/deploy notes — and links out to `CONTEXT.md` and `docs/adr/*`.
 - **Source code comments** close the loop: files under `src/server/routers/`, `src/lib/chat/`, `src/components/chat-panel.tsx` etc. link back to the spec and the specific ADR number that justifies their approach (see [best-practices.md](./best-practices.md), "ADR discipline").
