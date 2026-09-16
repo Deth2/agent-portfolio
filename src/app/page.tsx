@@ -45,7 +45,9 @@ export default function Home() {
   }
 
   return (
-    <div className={`flex min-h-full flex-1 flex-col md:flex-row md:items-stretch ${PAGE_BACKGROUND}`}>
+    <div
+      className={`flex min-h-full flex-1 flex-col md:h-full md:min-h-0 md:flex-row md:items-stretch ${PAGE_BACKGROUND}`}
+    >
       <ProfileSidebar cv={cv} />
       <main className="flex min-h-[76dvh] min-w-0 flex-1 flex-col p-3 pb-5 md:min-h-0 md:p-5 md:pl-0">
         <ChatPanel />

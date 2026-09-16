@@ -40,7 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="it"
       className={`${manrope.variable} ${ibmPlexMono.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col md:h-full md:overflow-hidden">
         <TRPCQueryProvider>
           <I18nProvider>{children}</I18nProvider>
         </TRPCQueryProvider>

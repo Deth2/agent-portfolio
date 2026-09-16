@@ -1,7 +1,7 @@
 ---
 name: Benedetta Correa
 title: Software Engineer
-tagline: Software engineer con diversi anni di esperienza nello sviluppo web, mobile e software maturata in aziende di consulenza, tra Next.js, React e TypeScript.
+tagline: "Invece di scrollare un portfolio, chiedimelo. Rispondo con le mie parole: cosa so fare, come lavoro, cosa ho combinato finora — e cosa non rifarei più."
 contacts:
   - label: Email
     value: benedetta.correa95@gmail.com
