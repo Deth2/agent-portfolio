@@ -4,9 +4,9 @@
     "loadError": "Couldn't load the profile. Please try again later."
   },
   "Chat": {
-    "greeting": "Hi! I'm Benedetta 👋 Want to know something about me? Ask away.",
+    "greeting": "Hi, I'm Benedetta — and yes, it's really me answering.\nAsk me anything about my work: skills, projects, how I think through problems.\nAsk about the weather and I'll pretend I didn't hear that.",
     "headerTitle": "Talk to me",
-    "headerSubtitle": "assistant grounded in my CV",
+    "headerSubtitle": "it's me replying",
     "questionLabel": "Your question",
     "questionPlaceholder": "Ask me something — e.g. what's your experience with React?",
     "send": "Send",
@@ -26,6 +26,6 @@
   },
   "Sidebar": {
     "tagsLabel": "Ask me about",
-    "availability": "Virtual assistant · always available"
+    "availability": "It's me answering, not a bot on shift"
   }
 }

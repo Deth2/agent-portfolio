@@ -151,11 +151,7 @@ function TypedReply({
 }) {
   const { displayedText, isTyping, skip } = useTypewriter(text, animate);
   return (
-    <AssistantBubble
-      avatarInitials={avatarInitials}
-      onClick={isTyping ? skip : undefined}
-      onClickLabel={skipLabel}
-    >
+    <AssistantBubble avatarInitials={avatarInitials} onClick={isTyping ? skip : undefined} onClickLabel={skipLabel}>
       <MarkdownContent text={displayedText} />
     </AssistantBubble>
   );
@@ -245,10 +241,9 @@ export function ChatPanel() {
   }
 
   return (
-    <Card className="min-h-0 flex-1 gap-0 rounded-[28px] border border-white/70 bg-surface/75 py-0 shadow-[0_30px_70px_-40px_oklch(0.45_0.06_250_/_0.45),0_2px_6px_-2px_oklch(0.45_0.06_250_/_0.12)] ring-0 backdrop-blur-xl">
+    <Card className="min-h-0 flex-1 gap-0 rounded-[28px] border border-white/70 bg-bg/75 py-0 shadow-[0_30px_70px_-40px_oklch(0.45_0.06_250_/_0.45),0_2px_6px_-2px_oklch(0.45_0.06_250_/_0.12)] ring-0 backdrop-blur-xl">
       <CardHeader className="flex flex-row items-center justify-between gap-4 border-b border-border px-5 py-4 md:px-6">
         <div className="flex items-center gap-3">
-          <span className="block h-[30px] w-[30px] rounded-[10px] bg-gradient-to-br from-secondary to-secondary-alt" />
           <div className="flex flex-col">
             <span className="text-[14.5px] font-semibold text-text-strong">{t("headerTitle")}</span>
             <span className="font-mono text-[10.5px] tracking-[0.06em] text-text-muted">
@@ -260,7 +255,7 @@ export function ChatPanel() {
           type="button"
           variant="outline"
           onClick={resetSession}
-          className="h-auto rounded-full border-border bg-surface/60 px-3.5 py-2 font-mono text-[10.5px] tracking-[0.08em] text-text-muted uppercase hover:border-primary/40 hover:bg-surface hover:text-text-strong"
+          className="h-auto rounded-full border-border bg-bg/60 px-3.5 py-2 font-mono text-[10.5px] tracking-[0.08em] text-text-muted uppercase hover:border-primary/40 hover:bg-bg hover:text-text-strong"
         >
           {t("resetButton")}
         </Button>
@@ -268,7 +263,9 @@ export function ChatPanel() {
 
       <CardContent ref={scrollAreaRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-5 md:px-6">
         <div ref={scrollContentRef} className="space-y-3">
-          <AssistantBubble avatarInitials={initials}>{t("greeting")}</AssistantBubble>
+          <AssistantBubble avatarInitials={initials}>
+            <MarkdownContent text={t("greeting")} />
+          </AssistantBubble>
 
           {messages.map((m, i) =>
             m.role === "assistant" ? (
@@ -282,7 +279,7 @@ export function ChatPanel() {
             ) : (
               <div
                 key={i}
-                className="ml-auto max-w-[85%] rounded-lg bg-primary-tint p-3 text-sm text-primary-dark"
+                className="ml-auto w-fit min-w-[20%] max-w-[85%] rounded-lg bg-primary-tint p-3 text-sm text-primary-dark"
               >
                 {m.content}
               </div>
@@ -303,7 +300,7 @@ export function ChatPanel() {
                 variant="secondary"
                 size="sm"
                 onClick={() => handleTopicClick(topic.prompt)}
-                className="rounded-full border border-border bg-surface/75 px-3.5 py-2 text-[13.5px] font-medium text-text hover:border-accent hover:bg-primary-tint"
+                className="rounded-full border border-border bg-bg/75 px-3.5 py-2 text-[13.5px] font-medium text-text hover:border-accent hover:bg-primary-tint"
               >
                 {topic.label}
               </Button>

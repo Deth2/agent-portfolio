@@ -2,26 +2,18 @@
 
 // Profile sidebar for the two-column chat layout introduced in ADR-0008
 // (design: docs/Portfolio agent chatbot-handoff.zip → "Portfolio Agent.dc.html").
-// Gives a visitor identity/context (avatar, name, role, tagline, top skills,
+// Gives a visitor identity/context (name, role, tagline, top skills,
 // contact) before they type anything, next to the chat card that does the
 // actual talking. Pure presentation — cv is already fetched by page.tsx
 // (single source of truth, see best-practices.md), passed down rather than
 // re-queried here.
 
 import { useTranslations } from "next-intl";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { CvProfile } from "@/lib/cv/types";
 
 // How many of the CV's skills surface as "ask me about" tags — enough to
 // read as a set without crowding the narrow sidebar column.
 const SIDEBAR_TAG_COUNT = 5;
-
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("");
-}
 
 export function ProfileSidebar({ cv }: { cv: CvProfile }) {
   const t = useTranslations("Sidebar");
@@ -31,17 +23,10 @@ export function ProfileSidebar({ cv }: { cv: CvProfile }) {
   const primaryContact = cv.contacts.find((contact) => contact.label === "Email") ?? cv.contacts[0];
 
   return (
-    <aside className="flex w-full flex-col gap-7 px-5 py-8 md:w-[336px] md:flex-none md:px-7 md:py-10">
-      <div className="flex items-center gap-3.5">
-        <Avatar className="h-14 w-14 rounded-2xl after:rounded-2xl">
-          <AvatarFallback className="rounded-2xl bg-primary-tint text-base font-semibold text-primary">
-            {initials(cv.name)}
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col gap-0.5">
-          <div className="font-display text-[28px] leading-[1.05]">{cv.name}</div>
-          <div className="font-mono text-[11px] tracking-[0.08em] text-text-muted uppercase">{cv.title}</div>
-        </div>
+    <aside className="flex w-full flex-col gap-7 px-5 py-8 md:w-[336px] md:flex-none md:overflow-y-auto md:px-7 md:py-10">
+      <div className="flex flex-col gap-0.5">
+        <div className="font-display text-[28px] leading-[1.05]">{cv.name}</div>
+        <div className="font-mono text-[11px] tracking-[0.08em] text-text-muted uppercase">{cv.title}</div>
       </div>
 
       <p className="text-[14.5px] leading-relaxed text-text-muted text-pretty">{cv.tagline}</p>

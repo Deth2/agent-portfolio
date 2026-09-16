@@ -4,15 +4,15 @@
     "loadError": "Non è stato possibile caricare il profilo. Riprova più tardi."
   },
   "Chat": {
-    "greeting": "Ciao! Sono Benedetta 👋 Vuoi conoscere qualcosa su di me? Fammi una domanda.",
+    "greeting": "Ciao, sono Benedetta — e sì, sto rispondendo io.\nPuoi chiedermi quello che vuoi sul mio lavoro: competenze, progetti, il modo in cui ragiono.\nSe mi chiedi del meteo faccio finta di non aver sentito.",
     "headerTitle": "Parla con me",
-    "headerSubtitle": "assistente basato sul mio CV",
+    "headerSubtitle": "sono io a risponderti",
     "questionLabel": "La tua domanda",
     "questionPlaceholder": "Chiedimi qualcosa — es. che esperienza hai con React?",
     "send": "Invia",
     "resetButton": "Nuova chat",
     "footerDisclaimer": "Rispondo solo su di me · sul resto sono serenamente ignorante",
-    "topicsLabel": "Posso parlarti di",
+    "topicsLabel": "Chiedimi pure di",
     "topics": [
       { "label": "Cosa sai fare meglio?", "prompt": "Cosa sai fare meglio?" },
       { "label": "Che percorso hai fatto?", "prompt": "Che percorso hai fatto?" },
@@ -25,7 +25,7 @@
     "skipTyping": "Mostra subito il testo completo"
   },
   "Sidebar": {
-    "tagsLabel": "Posso parlarti di",
-    "availability": "Assistente virtuale · sempre disponibile"
+    "tagsLabel": "Chiedimi pure di",
+    "availability": "Rispondo io, non un bot di turno"
   }
 }
