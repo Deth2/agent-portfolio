@@ -76,14 +76,14 @@ describe("parseCvProfile", () => {
   });
 
   it("fails loudly (does not return partial data) when a required frontmatter field is missing", () => {
-    expect(() => parseCvProfile(fixture("malformed-missing-frontmatter-field.md"))).toThrow(
-      CvParseError
-    );
+    expect(() =>
+      parseCvProfile(fixture("malformed-missing-frontmatter-field.md")),
+    ).toThrow(CvParseError);
   });
 
   it("fails loudly when the Esperienze section is missing entirely", () => {
     expect(() =>
-      parseCvProfile(fixture("malformed-missing-experiences-section.md"))
+      parseCvProfile(fixture("malformed-missing-experiences-section.md")),
     ).toThrow(CvParseError);
   });
 });

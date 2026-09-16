@@ -30,7 +30,9 @@ export default function Home() {
 
   if (isPending) {
     return (
-      <div className={`flex flex-1 items-center justify-center ${PAGE_BACKGROUND} p-8 text-sm text-muted-foreground`}>
+      <div
+        className={`flex flex-1 items-center justify-center ${PAGE_BACKGROUND} p-8 text-sm text-muted-foreground`}
+      >
         {tCommon("loading")}
       </div>
     );
@@ -38,7 +40,9 @@ export default function Home() {
 
   if (isError || !cv) {
     return (
-      <div className={`flex flex-1 items-center justify-center ${PAGE_BACKGROUND} p-8 text-sm text-destructive`}>
+      <div
+        className={`flex flex-1 items-center justify-center ${PAGE_BACKGROUND} p-8 text-sm text-destructive`}
+      >
         {tCommon("loadError")}
       </div>
     );

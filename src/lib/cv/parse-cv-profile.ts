@@ -36,22 +36,34 @@ export function parseCvProfile(markdown: string): CvProfile {
   };
 }
 
-function requireString(frontmatter: Record<string, unknown>, field: string): string {
+function requireString(
+  frontmatter: Record<string, unknown>,
+  field: string,
+): string {
   const value = frontmatter[field];
   if (typeof value !== "string" || value.trim() === "") {
-    throw new CvParseError(`frontmatter field "${field}" is required and must be a non-empty string`);
+    throw new CvParseError(
+      `frontmatter field "${field}" is required and must be a non-empty string`,
+    );
   }
   return value.trim();
 }
 
-function requireStringArray(frontmatter: Record<string, unknown>, field: string): string[] {
+function requireStringArray(
+  frontmatter: Record<string, unknown>,
+  field: string,
+): string[] {
   const value = frontmatter[field];
   if (!Array.isArray(value) || value.length === 0) {
-    throw new CvParseError(`frontmatter field "${field}" is required and must be a non-empty list`);
+    throw new CvParseError(
+      `frontmatter field "${field}" is required and must be a non-empty list`,
+    );
   }
   return value.map((item, index) => {
     if (typeof item !== "string" || item.trim() === "") {
-      throw new CvParseError(`frontmatter field "${field}[${index}]" must be a non-empty string`);
+      throw new CvParseError(
+        `frontmatter field "${field}[${index}]" must be a non-empty string`,
+      );
     }
     return item.trim();
   });
@@ -60,11 +72,15 @@ function requireStringArray(frontmatter: Record<string, unknown>, field: string)
 function requireContacts(frontmatter: Record<string, unknown>): Contact[] {
   const value = frontmatter.contacts;
   if (!Array.isArray(value) || value.length === 0) {
-    throw new CvParseError('frontmatter field "contacts" is required and must be a non-empty list');
+    throw new CvParseError(
+      'frontmatter field "contacts" is required and must be a non-empty list',
+    );
   }
   return value.map((item, index) => {
     if (typeof item !== "object" || item === null) {
-      throw new CvParseError(`frontmatter field "contacts[${index}]" must be an object`);
+      throw new CvParseError(
+        `frontmatter field "contacts[${index}]" must be an object`,
+      );
     }
     const record = item as Record<string, unknown>;
     return {
@@ -75,14 +91,20 @@ function requireContacts(frontmatter: Record<string, unknown>): Contact[] {
   });
 }
 
-function requireLanguages(frontmatter: Record<string, unknown>): SpokenLanguage[] {
+function requireLanguages(
+  frontmatter: Record<string, unknown>,
+): SpokenLanguage[] {
   const value = frontmatter.languages;
   if (!Array.isArray(value) || value.length === 0) {
-    throw new CvParseError('frontmatter field "languages" is required and must be a non-empty list');
+    throw new CvParseError(
+      'frontmatter field "languages" is required and must be a non-empty list',
+    );
   }
   return value.map((item, index) => {
     if (typeof item !== "object" || item === null) {
-      throw new CvParseError(`frontmatter field "languages[${index}]" must be an object`);
+      throw new CvParseError(
+        `frontmatter field "languages[${index}]" must be an object`,
+      );
     }
     const record = item as Record<string, unknown>;
     return {
@@ -96,11 +118,13 @@ function requireEntryField(
   record: Record<string, unknown>,
   field: string,
   listName: string,
-  index: number
+  index: number,
 ): string {
   const value = record[field];
   if (typeof value !== "string" || value.trim() === "") {
-    throw new CvParseError(`frontmatter field "${listName}[${index}].${field}" must be a non-empty string`);
+    throw new CvParseError(
+      `frontmatter field "${listName}[${index}].${field}" must be a non-empty string`,
+    );
   }
   return value.trim();
 }
@@ -108,7 +132,9 @@ function requireEntryField(
 function requireExperiences(body: string): Experience[] {
   const section = extractSection(body, "Esperienze");
   if (section === null) {
-    throw new CvParseError('body is missing the required "## Esperienze" section');
+    throw new CvParseError(
+      'body is missing the required "## Esperienze" section',
+    );
   }
 
   const experiences = splitByHeading(section, "###").map((block) => {
@@ -116,19 +142,28 @@ function requireExperiences(body: string): Experience[] {
     const match = headingLine.match(EXPERIENCE_HEADING);
     if (!match) {
       throw new CvParseError(
-        `malformed experience heading "${headingLine.trim()}" — expected "### Role — Context (Period)"`
+        `malformed experience heading "${headingLine.trim()}" — expected "### Role — Context (Period)"`,
       );
     }
     const [, role, context, period] = match;
     const description = rest.join("\n").trim();
     if (description === "") {
-      throw new CvParseError(`experience "${headingLine.trim()}" is missing a description`);
+      throw new CvParseError(
+        `experience "${headingLine.trim()}" is missing a description`,
+      );
     }
-    return { role: role.trim(), context: context.trim(), period: period.trim(), description };
+    return {
+      role: role.trim(),
+      context: context.trim(),
+      period: period.trim(),
+      description,
+    };
   });
 
   if (experiences.length === 0) {
-    throw new CvParseError('the "## Esperienze" section must contain at least one "### " entry');
+    throw new CvParseError(
+      'the "## Esperienze" section must contain at least one "### " entry',
+    );
   }
 
   return experiences;
@@ -147,7 +182,9 @@ function requireHobbies(body: string): string[] {
     .map((match) => match[1].trim());
 
   if (hobbies.length === 0) {
-    throw new CvParseError('the "## Hobby" section must contain at least one "- " bullet item');
+    throw new CvParseError(
+      'the "## Hobby" section must contain at least one "- " bullet item',
+    );
   }
 
   return hobbies;

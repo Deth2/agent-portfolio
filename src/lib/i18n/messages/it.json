@@ -15,10 +15,19 @@
     "topicsLabel": "Chiedimi pure di",
     "topics": [
       { "label": "Cosa sai fare meglio?", "prompt": "Cosa sai fare meglio?" },
-      { "label": "Che percorso hai fatto?", "prompt": "Che percorso hai fatto?" },
-      { "label": "Il progetto di cui sei più fiera?", "prompt": "Qual è il progetto di cui sei più fiera?" },
+      {
+        "label": "Che percorso hai fatto?",
+        "prompt": "Che percorso hai fatto?"
+      },
+      {
+        "label": "Il progetto di cui sei più fiera?",
+        "prompt": "Qual è il progetto di cui sei più fiera?"
+      },
       { "label": "Che lingue parli?", "prompt": "Che lingue parli?" },
-      { "label": "Possiamo lavorare insieme?", "prompt": "Possiamo lavorare insieme?" }
+      {
+        "label": "Possiamo lavorare insieme?",
+        "prompt": "Possiamo lavorare insieme?"
+      }
     ],
     "errorReply": "Mi dispiace, non sono riuscita a rispondere in questo momento. Riprova tra poco.",
     "limitExceededReply": "Hai raggiunto il numero massimo di domande per questa sessione. Scrivimi tramite i Contatti per continuare la conversazione.",

@@ -36,7 +36,12 @@ import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import type { AskAboutCv } from "@/lib/chat/use-chat-session";
 import { useAskAboutCv } from "@/lib/chat/use-ask-about-cv";
@@ -63,23 +68,39 @@ function avatarInitials(name: string) {
 // this safe against HTML/script injection from the reply text.
 const markdownComponents: Components = {
   p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-  ul: ({ children }) => <ul className="mb-2 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>,
-  ol: ({ children }) => <ol className="mb-2 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>,
+  ul: ({ children }) => (
+    <ul className="mb-2 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>
+  ),
+  ol: ({ children }) => (
+    <ol className="mb-2 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>
+  ),
   li: ({ children }) => <li>{children}</li>,
-  strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+  strong: ({ children }) => (
+    <strong className="font-semibold">{children}</strong>
+  ),
   a: ({ children, href }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="underline hover:text-accent">
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="underline hover:text-accent"
+    >
       {children}
     </a>
   ),
   code: ({ children }) => (
-    <code className="rounded bg-foreground/10 px-1 py-0.5 font-mono text-[0.85em]">{children}</code>
+    <code className="rounded bg-foreground/10 px-1 py-0.5 font-mono text-[0.85em]">
+      {children}
+    </code>
   ),
 };
 
 function MarkdownContent({ text }: { text: string }) {
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]} components={markdownComponents}>
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm, remarkBreaks]}
+      components={markdownComponents}
+    >
       {text}
     </ReactMarkdown>
   );
@@ -151,7 +172,11 @@ function TypedReply({
 }) {
   const { displayedText, isTyping, skip } = useTypewriter(text, animate);
   return (
-    <AssistantBubble avatarInitials={avatarInitials} onClick={isTyping ? skip : undefined} onClickLabel={skipLabel}>
+    <AssistantBubble
+      avatarInitials={avatarInitials}
+      onClick={isTyping ? skip : undefined}
+      onClickLabel={skipLabel}
+    >
       <MarkdownContent text={displayedText} />
     </AssistantBubble>
   );
@@ -198,7 +223,7 @@ export function ChatPanel() {
         return t("errorReply");
       }
     },
-    [askAboutCvMutation, t]
+    [askAboutCvMutation, t],
   );
 
   const { messages, isLoading, sendQuestion, resetSession } = useChatSession({
@@ -245,7 +270,9 @@ export function ChatPanel() {
       <CardHeader className="flex flex-row items-center justify-between gap-4 border-b border-border px-5 py-4 md:px-6">
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
-            <span className="text-[14.5px] font-semibold text-text-strong">{t("headerTitle")}</span>
+            <span className="text-[14.5px] font-semibold text-text-strong">
+              {t("headerTitle")}
+            </span>
             <span className="font-mono text-[10.5px] tracking-[0.06em] text-text-muted">
               {t("headerSubtitle")}
             </span>
@@ -261,7 +288,10 @@ export function ChatPanel() {
         </Button>
       </CardHeader>
 
-      <CardContent ref={scrollAreaRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-5 md:px-6">
+      <CardContent
+        ref={scrollAreaRef}
+        className="min-h-0 flex-1 overflow-y-auto px-5 py-5 md:px-6"
+      >
         <div ref={scrollContentRef} className="space-y-3">
           <AssistantBubble avatarInitials={initials}>
             <MarkdownContent text={t("greeting")} />
@@ -283,7 +313,7 @@ export function ChatPanel() {
               >
                 {m.content}
               </div>
-            )
+            ),
           )}
 
           {isLoading && <ThinkingBubble avatarInitials={initials} />}

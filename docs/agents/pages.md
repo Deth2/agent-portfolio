@@ -66,7 +66,7 @@ A thin rendering layer — all state lives in hooks, the component just renders 
 - `useAskAboutCv()` (tRPC mutation, see [api-conventions.md](./api-conventions.md)) is wrapped in a local `askAboutCv` that catches errors and returns a translated `t("errorReply")` string instead of throwing — so a network/LLM failure shows as a chat bubble, not a crash.
 - `useChatSession({ askAboutCv, limitExceededMessage })` (`src/lib/chat/use-chat-session.ts`) owns:
   - `messages` — the conversation history for this browser session only, never shared across visitors.
-  - the Question Limit counter — checked *before* calling `askAboutCv`; once over the threshold it synthesizes `limitExceededMessage` locally without a network call at all (see [ADR-0002](/docs/adr/0002-client-side-question-limit.md)).
+  - the Question Limit counter — checked _before_ calling `askAboutCv`; once over the threshold it synthesizes `limitExceededMessage` locally without a network call at all (see [ADR-0002](/docs/adr/0002-client-side-question-limit.md)).
   - `isLoading` / `sendQuestion` / `resetSession` — the last clears `messages` and the Question Limit counter, wired to the card header's "nuova chat" button (ADR-0008).
 - The greeting bubble is rendered separately from `messages` (not seeded into history) specifically so it reacts to the locale resolving after mount, instead of being frozen at whatever locale was current when the hook first initialized.
 - Local subcomponents: `AssistantBubble` (avatar + message bubble), `TypedReply`, `ThinkingBubble` — kept in the same file since none is reused elsewhere.

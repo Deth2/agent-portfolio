@@ -22,7 +22,8 @@ function splitIntoChunks(text: string): string[] {
 }
 
 function prefersReducedMotion(): boolean {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false;
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function")
+    return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
@@ -32,7 +33,9 @@ export function useTypewriter(text: string, enabled: boolean) {
   // OS setting isn't a case worth reacting to here.
   const [reducedMotion] = useState(prefersReducedMotion);
   const shouldAnimate = enabled && !reducedMotion;
-  const [revealed, setRevealed] = useState(() => (shouldAnimate ? 0 : chunks.length));
+  const [revealed, setRevealed] = useState(() =>
+    shouldAnimate ? 0 : chunks.length,
+  );
 
   useEffect(() => {
     if (!shouldAnimate) return;
@@ -60,7 +63,9 @@ export function useTypewriter(text: string, enabled: boolean) {
   // the original text — `revealed` only drives the display while an
   // animation is actually in flight, and may be stale otherwise (e.g. right
   // after `text` changes but before the effect above has re-synced it).
-  const displayedText = shouldAnimate ? chunks.slice(0, revealed).join("") : text;
+  const displayedText = shouldAnimate
+    ? chunks.slice(0, revealed).join("")
+    : text;
   const isTyping = shouldAnimate && revealed < chunks.length;
 
   function skip() {

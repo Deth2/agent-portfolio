@@ -24,12 +24,16 @@ export const chatRouter = router({
       z.object({
         question: z.string().trim().min(1),
         history: z.array(chatMessageSchema).default([]),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       try {
         const cvProfile = loadCvProfile();
-        const reply = await askAboutCv(input.question, cvProfile, input.history);
+        const reply = await askAboutCv(
+          input.question,
+          cvProfile,
+          input.history,
+        );
         return { reply };
       } catch (error) {
         console.error("askAboutCv failed", error);

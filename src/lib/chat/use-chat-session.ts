@@ -9,7 +9,10 @@
 // visitor's browser session), never shared across visitors.
 
 import { useCallback, useState } from "react";
-import { getQuestionLimitConfig, type QuestionLimitConfig } from "./question-limit-config";
+import {
+  getQuestionLimitConfig,
+  type QuestionLimitConfig,
+} from "./question-limit-config";
 
 export type ChatRole = "user" | "assistant";
 
@@ -21,7 +24,10 @@ export type ChatMessage = {
 // Shaped like the server's askAboutCv(question, cvProfile, history) with
 // the CvProfile already bound server-side — the client only ever supplies
 // the question and its own prior history.
-export type AskAboutCv = (question: string, history: ChatMessage[]) => Promise<string>;
+export type AskAboutCv = (
+  question: string,
+  history: ChatMessage[],
+) => Promise<string>;
 
 export type UseChatSessionOptions = {
   askAboutCv: AskAboutCv;
@@ -49,13 +55,17 @@ export function useChatSession({
       if (!question || isLoading) return;
 
       const history = messages;
-      const isOverLimit = questionLimit.enabled && questionCount >= questionLimit.threshold;
+      const isOverLimit =
+        questionLimit.enabled && questionCount >= questionLimit.threshold;
 
       setMessages((prev) => [...prev, { role: "user", content: question }]);
       setQuestionCount((count) => count + 1);
 
       if (isOverLimit) {
-        setMessages((prev) => [...prev, { role: "assistant", content: limitExceededMessage }]);
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: limitExceededMessage },
+        ]);
         return;
       }
 
@@ -67,7 +77,14 @@ export function useChatSession({
         setIsLoading(false);
       }
     },
-    [askAboutCv, isLoading, messages, questionCount, questionLimit, limitExceededMessage]
+    [
+      askAboutCv,
+      isLoading,
+      messages,
+      questionCount,
+      questionLimit,
+      limitExceededMessage,
+    ],
   );
 
   // Clears history and the Question Limit counter for a fresh session —

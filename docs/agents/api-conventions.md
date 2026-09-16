@@ -29,10 +29,7 @@ export const POST = handle(app);
 ```ts
 export const app = new Hono().basePath("/api");
 
-app.use(
-  "/trpc/*",
-  trpcServer({ router: appRouter, endpoint: "/api/trpc" })
-);
+app.use("/trpc/*", trpcServer({ router: appRouter, endpoint: "/api/trpc" }));
 ```
 
 **`src/server/trpc.ts`** — one shared tRPC instance, deliberately bare (no auth/session middleware — the site has no per-visitor identity):
@@ -69,16 +66,23 @@ export const chatRouter = router({
       z.object({
         question: z.string().trim().min(1),
         history: z.array(chatMessageSchema).default([]),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       try {
         const cvProfile = loadCvProfile();
-        const reply = await askAboutCv(input.question, cvProfile, input.history);
+        const reply = await askAboutCv(
+          input.question,
+          cvProfile,
+          input.history,
+        );
         return { reply };
       } catch (error) {
         console.error("askAboutCv failed", error);
-        throw new TRPCError({ code: "BAD_GATEWAY", message: "Failed to get a reply from the LLM" });
+        throw new TRPCError({
+          code: "BAD_GATEWAY",
+          message: "Failed to get a reply from the LLM",
+        });
       }
     }),
 });
@@ -89,7 +93,8 @@ export const chatRouter = router({
 **`src/lib/trpc/context.ts`** — creates the typed React context/hooks from the `AppRouter` type (no values cross the client/server boundary at import time, only the type):
 
 ```ts
-export const { TRPCProvider, useTRPC, useTRPCClient } = createTRPCContext<AppRouter>();
+export const { TRPCProvider, useTRPC, useTRPCClient } =
+  createTRPCContext<AppRouter>();
 ```
 
 **`src/lib/trpc/provider.tsx`** — wires a TanStack Query `QueryClient` (fresh per request on the server, reused across re-renders in the browser) together with the tRPC client, and is mounted once in `src/app/layout.tsx`:
@@ -98,7 +103,9 @@ export const { TRPCProvider, useTRPC, useTRPCClient } = createTRPCContext<AppRou
 export function TRPCQueryProvider({ children }: { children: ReactNode }) {
   const queryClient = getQueryClient();
   const [trpcClient] = useState(() =>
-    createTRPCClient<AppRouter>({ links: [httpBatchLink({ url: "/api/trpc" })] })
+    createTRPCClient<AppRouter>({
+      links: [httpBatchLink({ url: "/api/trpc" })],
+    }),
   );
   return (
     <QueryClientProvider client={queryClient}>
@@ -133,7 +140,7 @@ export function useAskAboutCv(): AskAboutCv {
       const { reply } = await mutateAsync({ question, history });
       return reply;
     },
-    [mutateAsync]
+    [mutateAsync],
   );
 }
 ```

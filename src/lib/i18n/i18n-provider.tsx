@@ -19,7 +19,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const locale = useSiteLocale();
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages[locale]} timeZone="Europe/Rome">
+    <NextIntlClientProvider
+      locale={locale}
+      messages={messages[locale]}
+      timeZone="Europe/Rome"
+    >
       {children}
     </NextIntlClientProvider>
   );

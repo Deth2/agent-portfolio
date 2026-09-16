@@ -20,6 +20,6 @@ export function useAskAboutCv(): AskAboutCv {
       const { reply } = await mutateAsync({ question, history });
       return reply;
     },
-    [mutateAsync]
+    [mutateAsync],
   );
 }

@@ -2,7 +2,8 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { useChatSession } from "./use-chat-session";
 
-const LIMIT_EXCEEDED_MESSAGE = "Hai raggiunto il limite, scrivimi tramite i Contatti.";
+const LIMIT_EXCEEDED_MESSAGE =
+  "Hai raggiunto il limite, scrivimi tramite i Contatti.";
 
 describe("useChatSession", () => {
   it("forwards a question under the Question Limit to askAboutCv and appends its reply", async () => {
@@ -12,14 +13,17 @@ describe("useChatSession", () => {
         askAboutCv,
         questionLimit: { enabled: true, threshold: 5 },
         limitExceededMessage: LIMIT_EXCEEDED_MESSAGE,
-      })
+      }),
     );
 
     await act(async () => {
       await result.current.sendQuestion("Che esperienza hai con React?");
     });
 
-    expect(askAboutCv).toHaveBeenCalledWith("Che esperienza hai con React?", []);
+    expect(askAboutCv).toHaveBeenCalledWith(
+      "Che esperienza hai con React?",
+      [],
+    );
     expect(result.current.messages).toEqual([
       { role: "user", content: "Che esperienza hai con React?" },
       { role: "assistant", content: "Ecco la risposta." },
@@ -33,7 +37,7 @@ describe("useChatSession", () => {
         askAboutCv,
         questionLimit: { enabled: true, threshold: 2 },
         limitExceededMessage: LIMIT_EXCEEDED_MESSAGE,
-      })
+      }),
     );
 
     await act(async () => {
@@ -53,7 +57,10 @@ describe("useChatSession", () => {
       role: "assistant",
       content: LIMIT_EXCEEDED_MESSAGE,
     });
-    expect(result.current.messages.at(-2)).toEqual({ role: "user", content: "Domanda 3" });
+    expect(result.current.messages.at(-2)).toEqual({
+      role: "user",
+      content: "Domanda 3",
+    });
   });
 
   it("applies no threshold when the Question Limit is disabled, regardless of question count", async () => {
@@ -63,7 +70,7 @@ describe("useChatSession", () => {
         askAboutCv,
         questionLimit: { enabled: false, threshold: 1 },
         limitExceededMessage: LIMIT_EXCEEDED_MESSAGE,
-      })
+      }),
     );
 
     for (let i = 0; i < 4; i++) {
@@ -74,7 +81,7 @@ describe("useChatSession", () => {
 
     expect(askAboutCv).toHaveBeenCalledTimes(4);
     expect(
-      result.current.messages.some((m) => m.content === LIMIT_EXCEEDED_MESSAGE)
+      result.current.messages.some((m) => m.content === LIMIT_EXCEEDED_MESSAGE),
     ).toBe(false);
   });
 
@@ -86,7 +93,7 @@ describe("useChatSession", () => {
         initialMessages: [{ role: "assistant", content: "Ciao!" }],
         questionLimit: { enabled: true, threshold: 5 },
         limitExceededMessage: LIMIT_EXCEEDED_MESSAGE,
-      })
+      }),
     );
 
     await act(async () => {
@@ -114,7 +121,7 @@ describe("useChatSession", () => {
         initialMessages: [{ role: "assistant", content: "Ciao!" }],
         questionLimit: { enabled: true, threshold: 1 },
         limitExceededMessage: LIMIT_EXCEEDED_MESSAGE,
-      })
+      }),
     );
 
     await act(async () => {
@@ -131,7 +138,9 @@ describe("useChatSession", () => {
     act(() => {
       result.current.resetSession();
     });
-    expect(result.current.messages).toEqual([{ role: "assistant", content: "Ciao!" }]);
+    expect(result.current.messages).toEqual([
+      { role: "assistant", content: "Ciao!" },
+    ]);
 
     await act(async () => {
       await result.current.sendQuestion("Domanda dopo il reset");
@@ -139,6 +148,9 @@ describe("useChatSession", () => {
     expect(askAboutCv).toHaveBeenLastCalledWith("Domanda dopo il reset", [
       { role: "assistant", content: "Ciao!" },
     ]);
-    expect(result.current.messages.at(-1)).toEqual({ role: "assistant", content: "Risposta." });
+    expect(result.current.messages.at(-1)).toEqual({
+      role: "assistant",
+      content: "Risposta.",
+    });
   });
 });

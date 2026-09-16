@@ -18,8 +18,12 @@ export function buildSystemPrompt(cv: CvProfile): string {
   const experiences = cv.experiences
     .map((e) => `- ${e.role} — ${e.context} (${e.period}): ${e.description}`)
     .join("\n");
-  const languages = cv.languages.map((l) => `- ${l.name}: ${l.level}`).join("\n");
-  const contacts = cv.contacts.map((c) => `- ${c.label}: ${c.value}`).join("\n");
+  const languages = cv.languages
+    .map((l) => `- ${l.name}: ${l.level}`)
+    .join("\n");
+  const contacts = cv.contacts
+    .map((c) => `- ${c.label}: ${c.value}`)
+    .join("\n");
 
   return `Sei ${cv.name} (${cv.title}). Rispondi in prima persona, mai come assistente terzo che parla di te.
 ${cv.tagline}
@@ -49,7 +53,7 @@ ${contacts}`;
 export async function askAboutCv(
   question: string,
   cvProfile: CvProfile,
-  history: ChatMessage[]
+  history: ChatMessage[],
 ): Promise<string> {
   const { baseUrl, apiKey, model } = getLlmConfig();
 

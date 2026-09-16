@@ -14,7 +14,9 @@ export function getQuestionLimitConfig(): QuestionLimitConfig {
   const enabled = process.env.NEXT_PUBLIC_QUESTION_LIMIT_ENABLED !== "false";
   const rawThreshold = Number(process.env.NEXT_PUBLIC_QUESTION_LIMIT_THRESHOLD);
   const threshold =
-    Number.isFinite(rawThreshold) && rawThreshold > 0 ? rawThreshold : DEFAULT_THRESHOLD;
+    Number.isFinite(rawThreshold) && rawThreshold > 0
+      ? rawThreshold
+      : DEFAULT_THRESHOLD;
 
   return { enabled, threshold };
 }

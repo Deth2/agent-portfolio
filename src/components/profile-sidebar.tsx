@@ -20,16 +20,21 @@ export function ProfileSidebar({ cv }: { cv: CvProfile }) {
   // The mockup shows a single contact line (email); reuse the "Email"
   // contact from content/cv.md instead of inventing sidebar-only copy, and
   // fall back to whichever contact comes first if that label ever changes.
-  const primaryContact = cv.contacts.find((contact) => contact.label === "Email") ?? cv.contacts[0];
+  const primaryContact =
+    cv.contacts.find((contact) => contact.label === "Email") ?? cv.contacts[0];
 
   return (
     <aside className="flex w-full flex-col gap-7 px-5 py-8 md:w-[336px] md:flex-none md:overflow-y-auto md:px-7 md:py-10">
       <div className="flex flex-col gap-0.5">
         <div className="font-display text-[28px] leading-[1.05]">{cv.name}</div>
-        <div className="font-mono text-[11px] tracking-[0.08em] text-text-muted uppercase">{cv.title}</div>
+        <div className="font-mono text-[11px] tracking-[0.08em] text-text-muted uppercase">
+          {cv.title}
+        </div>
       </div>
 
-      <p className="text-[14.5px] leading-relaxed text-text-muted text-pretty">{cv.tagline}</p>
+      <p className="text-[14.5px] leading-relaxed text-text-muted text-pretty">
+        {cv.tagline}
+      </p>
 
       <div className="flex flex-col gap-3">
         <div className="font-mono text-[10.5px] tracking-[0.1em] text-text-muted/80 uppercase">

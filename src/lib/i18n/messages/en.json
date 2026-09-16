@@ -15,9 +15,18 @@
     "topicsLabel": "Ask me about",
     "topics": [
       { "label": "What are you best at?", "prompt": "What are you best at?" },
-      { "label": "What's your career path?", "prompt": "What's your career path?" },
-      { "label": "Which project are you proudest of?", "prompt": "Which project are you proudest of?" },
-      { "label": "What languages do you speak?", "prompt": "What languages do you speak?" },
+      {
+        "label": "What's your career path?",
+        "prompt": "What's your career path?"
+      },
+      {
+        "label": "Which project are you proudest of?",
+        "prompt": "Which project are you proudest of?"
+      },
+      {
+        "label": "What languages do you speak?",
+        "prompt": "What languages do you speak?"
+      },
       { "label": "Can we work together?", "prompt": "Can we work together?" }
     ],
     "errorReply": "Sorry, I couldn't get a reply right now. Please try again shortly.",
