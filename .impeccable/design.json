@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-25T00:00:00Z",
+  "title": "Design System: Benedetta Correa, Portfolio Agent",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Harbor Blue", "canonical": "oklch(0.52 0.11 245)", "tonalRamp": ["oklch(0.25 0.08 245)","oklch(0.35 0.1 245)","oklch(0.45 0.11 245)","oklch(0.52 0.11 245)","oklch(0.62 0.1 245)","oklch(0.75 0.08 245)","oklch(0.87 0.05 245)","oklch(0.95 0.02 245)"] },
+      "accent": { "role": "tertiary", "displayName": "Clear Sky", "canonical": "oklch(0.72 0.12 245)", "tonalRamp": ["oklch(0.3 0.08 245)","oklch(0.42 0.1 245)","oklch(0.55 0.12 245)","oklch(0.65 0.12 245)","oklch(0.72 0.12 245)","oklch(0.8 0.09 245)","oklch(0.89 0.05 245)","oklch(0.95 0.02 245)"] },
+      "bg": { "role": "neutral", "displayName": "Morning Paper", "canonical": "oklch(0.981 0.008 240)", "tonalRamp": ["oklch(0.28 0.032 250)","oklch(0.4 0.03 250)","oklch(0.57 0.026 250)","oklch(0.75 0.02 240)","oklch(0.9 0.022 235)","oklch(0.955 0.02 230)","oklch(0.981 0.008 240)","oklch(1 0 0)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The person's name." },
+      "body": { "displayName": "Body", "purpose": "Conversation and tagline." },
+      "label": { "displayName": "Label", "purpose": "System chrome: roles, section labels, disclaimer." }
+    },
+    "shadows": [
+      { "name": "send-rest", "value": "0 1px 2px rgba(0,0,0,0.05)", "purpose": "Send button at rest (shadow-sm)." },
+      { "name": "send-hover", "value": "0 4px 6px -1px rgba(0,0,0,0.1)", "purpose": "Send button hover (shadow-md)." }
+    ],
+    "motion": [
+      { "name": "breathe", "value": "2.6s ease-in-out infinite", "purpose": "Availability dot pulse." },
+      { "name": "thinking-bounce", "value": "animate-bounce, 0.15s stagger", "purpose": "Reply pending indicator; off under reduced motion." }
+    ],
+    "breakpoints": [ { "name": "md", "value": "768px" } ]
+  },
+  "components": [
+    {
+      "name": "Topic Chip", "kind": "chip", "refersTo": "chip-topic",
+      "description": "Suggested question; hides after first message.",
+      "html": "<button class=\"ds-chip\">Esperienze</button>",
+      "css": ".ds-chip{font:500 13.5px Manrope,system-ui,sans-serif;color:oklch(0.34 0.03 250);background:oklch(0.981 0.008 240 / .75);border:1px solid oklch(0.9 0.022 235);border-radius:9999px;padding:8px 14px;cursor:pointer;transition:all .15s}.ds-chip:hover{border-color:oklch(0.72 0.12 245);background:oklch(0.955 0.02 230)}.ds-chip:focus-visible{outline:3px solid oklch(0.72 0.12 245 / .5)}"
+    },
+    {
+      "name": "Question Input", "kind": "input", "refersTo": "input-question",
+      "description": "Pill input with inset send button.",
+      "html": "<div class=\"ds-field\"><input class=\"ds-input\" placeholder=\"Chiedimi qualcosa\"><button class=\"ds-send\" aria-label=\"Send\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m3 3 18 9-18 9 3-9z\"/></svg></button></div>",
+      "css": ".ds-field{position:relative;width:280px}.ds-input{width:100%;height:48px;box-sizing:border-box;border:1px solid oklch(0.9 0.022 235);border-radius:9999px;padding:0 48px 0 16px;font:14px Manrope,system-ui,sans-serif;color:oklch(0.28 0.032 250);background:#fff}.ds-input:focus-visible{outline:none;border-color:oklch(0.72 0.12 245);box-shadow:0 0 0 3px oklch(0.72 0.12 245 / .3)}.ds-send{position:absolute;top:6px;right:6px;width:36px;height:36px;border:0;border-radius:9999px;display:grid;place-items:center;color:oklch(0.42 0.12 245);background:linear-gradient(135deg,oklch(0.72 0.12 245),oklch(0.79 0.105 212));box-shadow:0 1px 2px rgba(0,0,0,.05);cursor:pointer}.ds-send:hover{filter:brightness(1.05);box-shadow:0 4px 6px -1px rgba(0,0,0,.1)}"
+    },
+    {
+      "name": "Assistant Bubble", "kind": "card", "refersTo": "bubble-assistant",
+      "description": "Reply with avatar and squared top-left tail.",
+      "html": "<div class=\"ds-row\"><span class=\"ds-avatar\">BC</span><div class=\"ds-bubble\">Ciao, chiedimi pure.</div></div>",
+      "css": ".ds-row{display:flex;gap:10px;align-items:flex-start}.ds-avatar{width:32px;height:32px;border-radius:9999px;display:grid;place-items:center;background:oklch(0.42 0.12 245);color:oklch(0.981 0.008 240);font:600 12px Manrope,sans-serif}.ds-bubble{background:oklch(0.955 0.02 230);color:oklch(0.28 0.032 250);padding:12px;font:14px/1.625 Manrope,sans-serif;border-radius:2px 10px 10px 10px}"
+    },
+    {
+      "name": "Skill Tag", "kind": "chip", "refersTo": "chip-skill",
+      "description": "Static sidebar tag.",
+      "html": "<span class=\"ds-tag\">TypeScript</span>",
+      "css": ".ds-tag{display:inline-block;font:13px Manrope,sans-serif;color:oklch(0.34 0.03 250);background:#ffffffb3;border:1px solid oklch(0.9 0.022 235);border-radius:9999px;padding:8px 14px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Open Studio Window",
+    "overview": "A bright, quiet room with one conversation in it. Cool blue-teal light washes the page; a profile column introduces the person and a single rounded card does the talking.",
+    "keyCharacteristics": ["Light, airy oklch scale in two hues (blue ~245, teal ~205), never dark by default.","Three-voice type: serif for the person, sans for talk, mono for system chrome.","Pill shapes for everything interactive; softer rounded corners for containers.","Flat and tonal; depth comes from a soft page gradient and hairline rings, not shadows."],
+    "rules": [
+      { "name": "The Rare Accent Rule", "body": "Accent blue appears only on interactive or focus states.", "section": "colors" },
+      { "name": "The Cool Neutrals Rule", "body": "No pure grays; every neutral carries hue 230-250.", "section": "colors" },
+      { "name": "The Three Voices Rule", "body": "Serif is for the person, sans for conversation, mono for chrome.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat at rest; shadow is a state response.", "section": "elevation" }
+    ],
+    "dos": ["Do use the oklch tokens in globals.css as the single source; add new colors there first.","Do keep accent for interactive and focus states only.","Do use mono uppercase for system chrome and serif only for the person's name.","Do respect prefers-reduced-motion on any new animation."],
+    "donts": ["Don't use shadows at rest.","Don't introduce warm or neutral-gray colors that break the 230-250 hue family.","Don't add navigation, page scroll, or a contact form; the chat is the product.","Don't hardcode hex values in components."]
+  }
+}
